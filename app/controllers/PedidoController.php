@@ -20,7 +20,6 @@ class PedidoController extends Pedido implements IApiUsable
         $pedido->crearPedido();
         $payload = json_encode(array("mensaje" => "Pedido creado con exito"));
         $pedidoDB = Pedido::obtenerPedidoPorCodigoMesa($codigoMesa);
-        var_dump($pedidoDB);
         $mesa = Mesa::obtenerMesaPorCodigoMesa($codigoMesa);
         $mesa->idPedido = $pedidoDB[0]->id;
         $mesa->modificarMesa();
@@ -56,7 +55,7 @@ class PedidoController extends Pedido implements IApiUsable
     {
         $parametros = $request->getQueryParams();
         
-        $pedido = Pedido::obtenerPedidoPorPuesto($parametros['puesto'], 'en preparacion');
+        $pedido = Pedido::obtenerPedidoPorPuesto($parametros['puesto'], 'pendiente');
         if($pedido != null)
         {
             $payload = json_encode($pedido);
@@ -146,5 +145,20 @@ class PedidoController extends Pedido implements IApiUsable
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
     }    
+    public function AsociarFotoConPedido($request, $response, $args)
+    {
+        $parametros = $request->getParsedBody(); 
+        $uploadedFiles = $request->getUploadedFiles();
+
+        $imagen = $uploadedFiles['fotoCliente'];
+        $codigoPedido = $parametros['codigoPedido'];
+
+        Pedido::guardarYAsociarImagen($imagen, $codigoPedido);
+
+        $payload = json_encode(array("mensaje" => "Imagen asociada correctamente"));
+
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
+    }
 }
 ?>

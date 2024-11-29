@@ -19,8 +19,11 @@ class ProductoPedidoController extends ProductoPedido implements IApiUsable
         $productoPedido->crearProductoPedido();
         $pedido = Pedido::obtenerPedidoPorId($idPedido);
         $producto = Producto::obtenerProductoPorId($idProducto);
-        $pedido->tiempoEstimado = $pedido->tiempoEstimado + $producto->tiempoPreparacion;
-        Pedido::modificarPedido($pedido);
+        if($producto->tiempoPreparacion > $pedido->tiempoEstimado)
+        {
+            $pedido->tiempoEstimado = $pedido->tiempoEstimado + $producto->tiempoPreparacion;        
+            Pedido::modificarPedido($pedido);
+        }
         $payload = json_encode(array("mensaje" => "Producto Pedido creado con exito"));
         
         $response->getBody()->write($payload);

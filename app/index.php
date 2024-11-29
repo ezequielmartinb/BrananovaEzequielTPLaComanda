@@ -80,6 +80,9 @@ $app->group('/pedido', function (RouteCollectorProxy $group)
     $group->get('[/]', \PedidoController::class . ':TraerTodos');
     $group->get('/traer', \PedidoController::class . ':TraerUno')->add(new ValidarDatos(array("id")));
     $group->post('/crear', \PedidoController::class . ':CargarUno')->add(new ValidarDatos(array("nombreCliente", "codigoMesa")))->add(\Logger::class.':ValidarPermisosMozo');
+    $group->post('/tomarFoto', \PedidoController::class . ':AsociarFotoConPedido')->add(new ValidarDatos(array("codigoPedido")));
+    $group->get('/traerPorPuesto', \PedidoController::class . ':TraerPedidosPorPuestoYEstadoEnPreparacion'); // VALIDAR CON MW QUE INGRESE COCINERO-BARTENDER-CERVECERO
+
 });
 $app->group('/productoPedido', function (RouteCollectorProxy $group) 
 {
@@ -87,7 +90,5 @@ $app->group('/productoPedido', function (RouteCollectorProxy $group)
     $group->get('/traer', \ProductoPedidoController::class . ':TraerUno');
     $group->post('/crear', \ProductoPedidoController::class . ':CargarUno')->add(new ValidarDatos(array("idProducto", "idPedido", "idUsuario")))->add(\Logger::class.':ValidarPermisosMozo');
 });
-
-
 
 $app->run();

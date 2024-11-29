@@ -71,6 +71,35 @@ class Pedido
         $consulta->execute();
         return $consulta->fetchObject('Pedido');
     }
+    public static function asignarImagenAlPedido($rutaImagen, $codigoPedido)
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("UPDATE pedidos SET fotoCliente = :fotoCliente WHERE codigoPedido = :codigoPedido");
+
+        $consulta->bindValue(':fotoCliente', $rutaImagen, PDO::PARAM_STR);
+        $consulta->bindValue(':codigoPedido', $codigoPedido, PDO::PARAM_INT);
+
+        $consulta->execute();
+    }
+    public static function guardarYAsociarImagen($imagen, $codigoPedido)
+    {
+
+        $carpetaDestino = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'fotosClientes' . DIRECTORY_SEPARATOR;
+        $nombreImagen = $codigoPedido . ".jpg";
+        $rutaImagen = $carpetaDestino . $nombreImagen;
+
+        if (!is_dir($carpetaDestino)) 
+        {
+            mkdir($carpetaDestino, 0777, true);
+        }
+
+        $fileStream = $imagen->getStream();
+
+        $fileStream->seek(0);
+        file_put_contents($rutaImagen, $fileStream->getContents());
+
+        Pedido::asignarImagenAlPedido($rutaImagen, $codigoPedido);        
+    }
 
     public static function modificarPedido($pedido)
     {

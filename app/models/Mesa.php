@@ -7,15 +7,17 @@ class Mesa
     public $codigoMesa;
     public $idMozoAsignado;
     public $estado;
+    public $recaudacion;
 
     public function crearMesa()
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO mesas (codigoMesa, idMozoAsignado, estado) VALUES (:codigoMesa, :idMozoAsignado, :estado)");
+        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO mesas (codigoMesa, idMozoAsignado, estado, recaudacion) VALUES (:codigoMesa, :idMozoAsignado, :estado, :recaudacion)");
         $codigoMesa = Mesa::obtenerCodigoMesa();
         $consulta->bindValue(':codigoMesa', $codigoMesa, PDO::PARAM_STR);
         $consulta->bindValue(':idMozoAsignado', $this->idMozoAsignado, PDO::PARAM_INT);
         $consulta->bindValue(':estado', $this->estado, PDO::PARAM_STR);
+        $consulta->bindValue(':recaudacion', $this->recaudacion, PDO::PARAM_INT);
         $consulta->execute();
 
         return $objAccesoDatos->obtenerUltimoId();
@@ -24,7 +26,7 @@ class Mesa
     public static function obtenerTodos()
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, idPedido, codigoMesa, idMozoAsignado, estado FROM Mesas");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, idPedido, codigoMesa, idMozoAsignado, estado, recaudacion FROM Mesas");
         $consulta->execute();
 
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Mesa');
@@ -33,7 +35,7 @@ class Mesa
     public static function obtenerMesaPorId($id)
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, idPedido, codigoMesa, idMozoAsignado, estado  FROM Mesas WHERE id = :id");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, idPedido, codigoMesa, idMozoAsignado, estado, recaudacion  FROM Mesas WHERE id = :id");
         $consulta->bindValue(':id', $id, PDO::PARAM_INT);
         $consulta->execute();
 
@@ -42,7 +44,7 @@ class Mesa
     public static function obtenerMesaPorIdMozoAsignado($idMozoAsignado)
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, idPedido, codigoMesa, idMozoAsignado, estado FROM Mesas WHERE idMozoAsignado = :idMozoAsignado");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, idPedido, codigoMesa, idMozoAsignado, estado, recaudacion FROM Mesas WHERE idMozoAsignado = :idMozoAsignado");
         $consulta->bindValue(':idMozoAsignado', $idMozoAsignado, PDO::PARAM_INT);
         $consulta->execute();
 
@@ -51,7 +53,7 @@ class Mesa
     public static function obtenerMesaPorCodigoMesa($codigoMesa)
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, idPedido, codigoMesa, idMozoAsignado, estado FROM Mesas WHERE codigoMesa = :codigoMesa");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, idPedido, codigoMesa, idMozoAsignado, estado, recaudacion FROM Mesas WHERE codigoMesa = :codigoMesa");
         $consulta->bindValue(':codigoMesa', $codigoMesa, PDO::PARAM_STR);
         $consulta->execute();
 

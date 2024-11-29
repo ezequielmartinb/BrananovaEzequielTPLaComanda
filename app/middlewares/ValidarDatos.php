@@ -30,7 +30,7 @@ class ValidarDatos
                 }           
             }
         }
-        if($paramsPost != null)
+        else if($paramsPost != null)
         {
             foreach($this->camposAValidar as $key => $value)
             {            
@@ -69,7 +69,10 @@ class ValidarDatos
                 break;        
             case array("idProductoPedido"):
                 return $this->ValidarId($request, $requestHandler, $response, "idProductoPedido");
-                break;                  
+                break;
+            case array("codigoPedido"):
+                return $this->ValidarDatosCodigoPedidoYFoto($request, $requestHandler, $response);
+                break;                   
         }   
     }    
     public function ValidarDatosAltaUsuario(Request $request, RequestHandler $requestHandler, $response)
@@ -223,7 +226,39 @@ class ValidarDatos
         }
         
         return $response;   
-    } 
+    }
+    public function ValidarDatosCodigoPedidoYFoto(Request $request, RequestHandler $requestHandler, $response)
+    {
+        $params = $request->getParsedBody(); 
+        $uploadedFiles = $request->getUploadedFiles();       
+        
+        if(isset($params["codigoPedido"]) && isset($uploadedFiles["fotoCliente"]))
+        {            
+            $codigoPedidoIngresado = $params["codigoPedido"];             
+            $fotoClienteIngresado = $uploadedFiles['fotoCliente'];
+            $nombreArchivo = $fotoClienteIngresado->getClientFilename();
+            $extensionDeLaFoto = strtolower(pathinfo($nombreArchivo, PATHINFO_EXTENSION));                          
+            if(($extensionDeLaFoto == 'png' || $extensionDeLaFoto == 'jpg' || $extensionDeLaFoto == 'jpeg') 
+            & is_string($codigoPedidoIngresado) && Pedido::obtenerPedidoPorCodigoPedido($codigoPedidoIngresado))
+            {
+                echo "datos correcto";
+                return $requestHandler->handle($request);     
+            }
+            else
+            {
+                $response->getBody()->write(json_encode(array("error" => "Datos incorrecto")));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+            }
+            
+        }           
+        else
+        {
+            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+        
+        return $response;   
+    }  
     
     public function ValidarId(Request $request, RequestHandler $requestHandler, $response, $id)
     {

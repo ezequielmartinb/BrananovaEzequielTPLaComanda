@@ -51,19 +51,14 @@ class PedidoController extends Pedido implements IApiUsable
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
     }
-    public function TraerPedidosPorPuestoYEstadoEnPreparacion($request, $response, $args)
+    
+    public function TraerTiempoEstimadoPorCodigoMesayPedido($request, $response, $args)
     {
-        $parametros = $request->getQueryParams();
-        
-        $pedido = Pedido::obtenerPedidoPorPuesto($parametros['puesto'], 'pendiente');
-        if($pedido != null)
-        {
-            $payload = json_encode($pedido);
-        }
-        else
-        {
-            $payload = json_encode(array("mensaje" => "EL PUESTO NO EXISTE"));
-        }       
+        $parametros = $request->getParsedBody();
+
+        $pedido = Pedido::obtenerPedidoPorCodigoPedidoYCodigoMesa($parametros['codigoPedido'], $parametros['codigoMesa']);
+        $payload = json_encode(array("Tiempo de espera" => $pedido[0]->tiempoEstimado . ' minutos'));
+
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
     }
@@ -91,7 +86,7 @@ class PedidoController extends Pedido implements IApiUsable
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
     }    
-    public function ModificarEstadoPedidoYTiempoPreparacion($request, $response, $args)
+    public function CambiarEstadoPedidoEnPreparacion($request, $response, $args)
     {
         $parametros = $request->getParsedBody();
         
@@ -99,9 +94,15 @@ class PedidoController extends Pedido implements IApiUsable
         
         if($pedido != null) 
         {            
+            $productosPedidos = ProductoPedido::obtenerIdPorIdPedido($pedido->id);
             $pedido->estado = "en preparacion";   
-            Pedido::modificarPedido($pedido);          
-            $payload = json_encode(array("mensaje" => "Pedido modificado con exito"));
+            foreach($productosPedidos as $productoPedido)
+            {
+                $productoPedido->estado = "en preparacion";
+            }
+            Pedido::modificarPedido($pedido);
+            ProductoPedido::modificarProductoPedido($productoPedido);
+            $payload = json_encode(array("mensaje" => "Pedido se encuentra en preparacion"));
         }
         else
         {

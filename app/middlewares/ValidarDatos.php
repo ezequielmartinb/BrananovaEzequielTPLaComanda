@@ -72,7 +72,16 @@ class ValidarDatos
                 break;
             case array("codigoPedido"):
                 return $this->ValidarDatosCodigoPedidoYFoto($request, $requestHandler, $response);
-                break;                   
+                break;
+            case array("codigoPedido", "codigoMesa"):
+                return $this->ValidarDatosCodigoMesaYPedido($request, $requestHandler, $response);
+                break; 
+            case array("puesto"):
+                return $this->ValidarPuesto($request, $requestHandler, $response);
+                break;
+            case array("estado"):
+                return $this->ValidarEstado($request, $requestHandler, $response);
+                break;                      
         }   
     }    
     public function ValidarDatosAltaUsuario(Request $request, RequestHandler $requestHandler, $response)
@@ -197,6 +206,10 @@ class ValidarDatos
             {                
                 return $requestHandler->handle($request);                
             }
+            else
+            {
+                $response->getBody()->write(json_encode(array("error" => "Datos incorrectos")));
+            }
         }           
         else
         {
@@ -239,9 +252,8 @@ class ValidarDatos
             $nombreArchivo = $fotoClienteIngresado->getClientFilename();
             $extensionDeLaFoto = strtolower(pathinfo($nombreArchivo, PATHINFO_EXTENSION));                          
             if(($extensionDeLaFoto == 'png' || $extensionDeLaFoto == 'jpg' || $extensionDeLaFoto == 'jpeg') 
-            & is_string($codigoPedidoIngresado) && Pedido::obtenerPedidoPorCodigoPedido($codigoPedidoIngresado))
+            & is_string($codigoPedidoIngresado) && Pedido::obtenerPedidoPorCodigoPedido($codigoPedidoIngresado) != null)
             {
-                echo "datos correcto";
                 return $requestHandler->handle($request);     
             }
             else
@@ -259,6 +271,86 @@ class ValidarDatos
         
         return $response;   
     }  
+    public function ValidarDatosCodigoMesaYPedido(Request $request, RequestHandler $requestHandler, $response)
+    {
+        $params = $request->getParsedBody(); 
+        
+        if(isset($params["codigoPedido"]) && isset($params["codigoMesa"]))
+        {            
+            $codigoPedidoIngresado = $params["codigoPedido"];             
+            $codigoMesaIngresado = $params["codigoMesa"];             
+            if(is_string($codigoPedidoIngresado) && is_string($codigoMesaIngresado))
+            {
+                return $requestHandler->handle($request);     
+            }
+            else
+            {
+                $response->getBody()->write(json_encode(array("error" => "Datos incorrecto")));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+            }
+            
+        }           
+        else
+        {
+            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+        
+        return $response;   
+    } 
+    public function ValidarPuesto(Request $request, RequestHandler $requestHandler, $response)
+    {
+        $params = $request->getQueryParams(); 
+        
+        if(isset($params["puesto"]))
+        {            
+            $puestoIngresado = $params["puesto"];             
+            if(is_string($puestoIngresado) && ($puestoIngresado == 'Cocinero' || $puestoIngresado == 'Bartender' || $puestoIngresado == 'Cervecero'))
+            {
+                return $requestHandler->handle($request);     
+            }
+            else
+            {
+                $response->getBody()->write(json_encode(array("error" => "Puesto ingresado incorrecto")));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+            }
+            
+        }           
+        else
+        {
+            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+        
+        return $response;   
+    }   
+    public function ValidarEstado(Request $request, RequestHandler $requestHandler, $response)
+    {
+        $params = $request->getParsedBody(); 
+        
+        if(isset($params["estado"]))
+        {            
+            $estadoIngresado = $params["estado"];             
+            if(is_string($estadoIngresado) && ($estadoIngresado == 'pendiente' || $estadoIngresado == 'listo para servir'))
+            {
+                return $requestHandler->handle($request);     
+            }
+            else
+            {
+                $response->getBody()->write(json_encode(array("error" => "Estado ingresado incorrecto")));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+            }
+            
+        }           
+        else
+        {
+            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+        
+        return $response;   
+    }  
+
     
     public function ValidarId(Request $request, RequestHandler $requestHandler, $response, $id)
     {

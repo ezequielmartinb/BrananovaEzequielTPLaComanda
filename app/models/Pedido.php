@@ -33,7 +33,7 @@ class Pedido
     public static function obtenerTodos()
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, tiempoEstimado, nombreCliente, estado, fechaAlta, fechaBaja FROM pedidos");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, tiempoEstimado, nombreCliente, fotoCliente, estado, fechaAlta, fechaBaja FROM pedidos");
         $consulta->execute();
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
     }   
@@ -41,7 +41,7 @@ class Pedido
     public static function obtenerPedidoPorCodigoPedido($codigoPedido)
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, tiempoEstimado, nombreCliente, estado, fechaAlta, fechaBaja FROM pedidos WHERE codigoPedido = :codigoPedido");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, tiempoEstimado, nombreCliente, fotoCliente, estado, fechaAlta, fechaBaja FROM pedidos WHERE codigoPedido = :codigoPedido");
         $consulta->bindValue(':codigoPedido', $codigoPedido, PDO::PARAM_STR);
         $consulta->execute();
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
@@ -49,7 +49,16 @@ class Pedido
     public static function obtenerPedidoPorCodigoMesa($codigoMesa)
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, tiempoEstimado, nombreCliente, estado, fechaAlta, fechaBaja FROM pedidos WHERE codigoMesa = :codigoMesa");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, tiempoEstimado, nombreCliente, fotoCliente, estado, fechaAlta, fechaBaja FROM pedidos WHERE codigoMesa = :codigoMesa");
+        $consulta->bindValue(':codigoMesa', $codigoMesa, PDO::PARAM_STR);
+        $consulta->execute();
+        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
+    }
+    public static function obtenerPedidoPorCodigoPedidoYCodigoMesa($codigoPedido, $codigoMesa)
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, tiempoEstimado, nombreCliente, fotoCliente, estado, fechaAlta, fechaBaja FROM pedidos WHERE codigoPedido = :codigoPedido AND codigoMesa = :codigoMesa");
+        $consulta->bindValue(':codigoPedido', $codigoPedido, PDO::PARAM_STR);
         $consulta->bindValue(':codigoMesa', $codigoMesa, PDO::PARAM_STR);
         $consulta->execute();
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
@@ -58,7 +67,7 @@ class Pedido
     public static function obtenerPedidoPorId($id)
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, tiempoEstimado, nombreCliente, estado, fechaAlta, fechaBaja FROM pedidos WHERE id = :id");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, tiempoEstimado, nombreCliente, fotoCliente, estado, fechaAlta, fechaBaja FROM pedidos WHERE id = :id");
         $consulta->bindValue(':id', $id, PDO::PARAM_INT);
         $consulta->execute();
         return $consulta->fetchObject('Pedido');
@@ -66,7 +75,7 @@ class Pedido
     public static function obtenerPedidoPorEstado($estado)
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, tiempoEstimado, nombreCliente, estado, fechaAlta, fechaBaja FROM pedidos WHERE estado = :estado");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, tiempoEstimado, nombreCliente, fotoCliente, estado, fechaAlta, fechaBaja FROM pedidos WHERE estado = :estado");
         $consulta->bindValue(':estado', $estado, PDO::PARAM_INT);
         $consulta->execute();
         return $consulta->fetchObject('Pedido');

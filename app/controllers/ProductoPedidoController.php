@@ -53,7 +53,22 @@ class ProductoPedidoController extends ProductoPedido implements IApiUsable
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
     }
-    
+    public function TraerProductosPedidosPendientesPorPuesto($request, $response, $args)
+    {
+        $parametros = $request->getQueryParams();
+        
+        $producto = ProductoPedido::obtenerProductosPorPuesto($parametros['puesto'], 'pendiente');
+        if($producto != null)
+        {
+            $payload = json_encode($producto);
+        }
+        else
+        {
+            $payload = json_encode(array("mensaje" => "EL PUESTO NO EXISTE"));
+        }       
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
+    }
     public function ModificarUno($request, $response, $args)
     {
         $parametros = $request->getParsedBody();        
@@ -78,7 +93,37 @@ class ProductoPedidoController extends ProductoPedido implements IApiUsable
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
     }
+    public function ModificarEstado($request, $response, $args)
+    {
+        $parametros = $request->getParsedBody(); 
+        $cookies = $request->getCookieParams();
+        $token = $cookies['JWT'];
+        AutentificadorJWT::VerificarToken($token);
+        $datos = AutentificadorJWT::ObtenerData($token);       
+        $productosPedidos = ProductoPedido::obtenerProductoPedidoPorIdUsuario($datos->id);
+        if($productosPedidos != null && count($productosPedidos) > 0) 
+        {            
+            foreach($productosPedidos as $productoPedido)
+            {
+                if($productoPedido->idUsuario == $datos->id)
+                {
+                    $estado = $parametros['estado'];           
+                    $productoPedido->estado = $estado;
+                    ProductoPedido::modificarProductoPedido($productoPedido);
+                }
+            }
+            $payload = json_encode(array("mensaje" => "El estado del Producto Pedido fue modificado con exito"));
+        }
+        else
+        {
+            $payload = json_encode(array("mensaje" => "EL ID INGRESADO NO EXISTE Y NO SE PUEDE MODIFICAR"));
+        }          
+        
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
+    }
 
+    
     public function BorrarUno($request, $response, $args)
     {
         $parametros = $request->getParsedBody();        

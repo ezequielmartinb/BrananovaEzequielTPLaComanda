@@ -81,14 +81,23 @@ $app->group('/pedido', function (RouteCollectorProxy $group)
     $group->get('/traer', \PedidoController::class . ':TraerUno')->add(new ValidarDatos(array("id")));
     $group->post('/crear', \PedidoController::class . ':CargarUno')->add(new ValidarDatos(array("nombreCliente", "codigoMesa")))->add(\Logger::class.':ValidarPermisosMozo');
     $group->post('/tomarFoto', \PedidoController::class . ':AsociarFotoConPedido')->add(new ValidarDatos(array("codigoPedido")));
-    $group->get('/traerPorPuesto', \PedidoController::class . ':TraerPedidosPorPuestoYEstadoEnPreparacion'); // VALIDAR CON MW QUE INGRESE COCINERO-BARTENDER-CERVECERO
-
+    // PUNTO 3
+    $group->put('/cambiarEstado', \PedidoController::class . ':CambiarEstadoPedidoEnPreparacion')->add(new ValidarDatos(array("id")));
+    // PUNTO 4
+    $group->post('/traerPedidoPorCodigoMesaYPedido', \PedidoController::class . ':TraerTiempoEstimadoPorCodigoMesayPedido')->add(new ValidarDatos(array("codigoPedido", "codigoMesa")));
+    // PUNTO 5
+    $group->get('/socio', \PedidoController::class . ':TraerTodos')->add(\Logger::class.':ValidarPermisosSocio');
 });
 $app->group('/productoPedido', function (RouteCollectorProxy $group) 
 {
     $group->get('[/]', \ProductoPedidoController::class . ':TraerTodos');
     $group->get('/traer', \ProductoPedidoController::class . ':TraerUno');
     $group->post('/crear', \ProductoPedidoController::class . ':CargarUno')->add(new ValidarDatos(array("idProducto", "idPedido", "idUsuario")))->add(\Logger::class.':ValidarPermisosMozo');
+    // PUNTO 3
+    $group->get('/traerPorPuesto', \ProductoPedidoController::class . ':TraerProductosPedidosPendientesPorPuesto')->add(new ValidarDatos(array("puesto")));
+    // PUNTO 6
+    $group->post('/modificarEstado', \ProductoPedidoController::class . ':ModificarEstado')->add(new ValidarDatos(array("estado")))->add(\Logger::class.':ValidarPermisosPuestoEmpleados');
+
 });
 
 $app->run();

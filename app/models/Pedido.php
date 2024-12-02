@@ -70,7 +70,7 @@ class Pedido
         $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, tiempoEstimado, nombreCliente, fotoCliente, estado, fechaAlta, fechaBaja FROM pedidos WHERE id = :id");
         $consulta->bindValue(':id', $id, PDO::PARAM_INT);
         $consulta->execute();
-        return $consulta->fetchObject('Pedido');
+        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
     }
     public static function obtenerPedidoPorEstado($estado)
     {
@@ -130,6 +130,14 @@ class Pedido
         $consulta->bindValue(':tiempoEstimado', $pedido->tiempoEstimado, PDO::PARAM_INT);
         $consulta->bindValue(':nombreCliente', $pedido->nombreCliente, PDO::PARAM_STR);
         $consulta->bindValue(':estado', $pedido->estado, PDO::PARAM_STR);
+        $consulta->execute();
+    }
+    public static function modificarPedidoEstado($estado, $id)
+    {
+        $objAccesoDato = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDato->prepararConsulta("UPDATE pedidos SET estado = :estado WHERE id = :id");
+        $consulta->bindValue(':id', $id, PDO::PARAM_INT);        
+        $consulta->bindValue(':estado', $estado, PDO::PARAM_STR);
         $consulta->execute();
     }
     public static function obtenerPedidoPorPuesto($puesto, $estado)

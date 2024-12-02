@@ -69,7 +69,5 @@ CREATE TABLE `encuestas`
 `fecha` date NOT NULL,  
 
 
-PRIMARY KEY (`id`), 
-FOREIGN KEY (`idMesa`) REFERENCES `mesas`(`id`),
-FOREIGN KEY (`idPedido`) REFERENCES `pedidos`(`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

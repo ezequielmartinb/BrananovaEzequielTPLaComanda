@@ -64,7 +64,7 @@ class ProductoPedidoController extends ProductoPedido implements IApiUsable
         }
         else
         {
-            $payload = json_encode(array("mensaje" => "EL PUESTO NO EXISTE"));
+            $payload = json_encode(array("mensaje" => "No hay productos pendientes"));
         }       
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');

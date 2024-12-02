@@ -37,7 +37,7 @@ class Producto
         $consulta->bindValue(':id', $id, PDO::PARAM_INT);
         $consulta->execute();
 
-        return $consulta->fetchObject('Producto');
+        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Producto');
     }
 
     public function modificarProducto($producto)

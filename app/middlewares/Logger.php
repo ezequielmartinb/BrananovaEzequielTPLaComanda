@@ -94,7 +94,7 @@
             $datos = AutentificadorJWT::ObtenerData($token);
             if(!$puesto && $datos->puesto == 'Socio') 
             {
-                echo "El socio " . $datos->apellido . ", " . $datos->nombre . " solicitó el listado de pedidos";
+                echo "El socio " . $datos->apellido . ", " . $datos->nombre . " realizó la accion: ";
                 return $handler->handle($request);
             }
             throw new Exception('Acceso denegado. NO es un Socio');

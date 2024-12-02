@@ -86,27 +86,28 @@ class PedidoController extends Pedido implements IApiUsable
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
     }    
-    public function CambiarEstadoPedidoEnPreparacion($request, $response, $args)
+    public function CambiarEstadoPedido($request, $response, $args)
     {
         $parametros = $request->getParsedBody();
         
         $pedido = Pedido::obtenerPedidoPorId($parametros['id']);
+        $estado = $parametros['estado'];
         
-        if($pedido != null) 
+        if($pedido != null && $pedido->estado == 'pendiente') 
         {            
             $productosPedidos = ProductoPedido::obtenerIdPorIdPedido($pedido->id);
-            $pedido->estado = "en preparacion";   
+            $pedido->estado = $estado;   
             foreach($productosPedidos as $productoPedido)
             {
-                $productoPedido->estado = "en preparacion";
+                $productoPedido->estado = $estado;
             }
             Pedido::modificarPedido($pedido);
             ProductoPedido::modificarProductoPedido($productoPedido);
-            $payload = json_encode(array("mensaje" => "Pedido se encuentra en preparacion"));
+            $payload = json_encode(array("mensaje" => "Pedido se encuentra en $estado"));
         }
         else
         {
-            $payload = json_encode(array("mensaje" => "EL ID INGRESADO NO EXISTE Y NO SE PUEDE MODIFICAR"));
+            $payload = json_encode(array("mensaje" => "No hay pedidos pendientes"));
         }          
         
         $response->getBody()->write($payload);

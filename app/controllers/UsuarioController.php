@@ -100,7 +100,7 @@ class UsuarioController extends Usuario implements IApiUsable
       $response->getBody()->write($payload);
       return $response->withHeader('Content-Type', 'application/json');
     }
-    public function DescargarVentasCsv($request, $response, $args)
+    public function DescargarUsuariosCsv($request, $response, $args)
     {
       $usuarios = Usuario::obtenerTodos();
 
@@ -113,11 +113,14 @@ class UsuarioController extends Usuario implements IApiUsable
         fputcsv($archivo, 
         [
           $usuario->id,
+          $usuario->nombre,
+          $usuario->apellido,
           $usuario->mail,
-          $usuario->idTienda,
-          $usuario->numeroPedido,
-          $usuario->cantidad,
-          $usuario->fechaAlta
+          $usuario->clave,
+          $usuario->puesto,
+          $usuario->estado,
+          $usuario->fechaInicio,
+          $usuario->fechaBaja
         ]);
       }
 
@@ -128,7 +131,7 @@ class UsuarioController extends Usuario implements IApiUsable
       fclose($archivo);
 
       $response->getBody()->write($csvContent);
-      return $response->withHeader('Content-Type', 'application/csv')->withHeader('Content-Disposition', 'attachment; filename="ventas.csv"');         
+      return $response->withHeader('Content-Type', 'application/csv')->withHeader('Content-Disposition', 'attachment; filename="usuarios.csv"');         
     }
 
     

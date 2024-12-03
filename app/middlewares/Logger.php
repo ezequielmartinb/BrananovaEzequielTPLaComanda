@@ -66,38 +66,56 @@
         {
             $cookies = $request->getCookieParams();
             $token = $cookies['JWT'];
-            AutentificadorJWT::VerificarToken($token);
-            $datos = AutentificadorJWT::ObtenerData($token);
-            if(!$puesto && ($datos->puesto == 'Bartender' || $datos->puesto == 'Cervecero' || $datos->puesto == 'Cocinero'))
+            try
             {
-                return $handler->handle($request);
+                AutentificadorJWT::VerificarToken($token);
+                $datos = AutentificadorJWT::ObtenerData($token);
+                if(!$puesto && ($datos->puesto == 'Bartender' || $datos->puesto == 'Cervecero' || $datos->puesto == 'Cocinero'))
+                {
+                    return $handler->handle($request);
+                }
             }
-            throw new Exception('Acceso denegado');
+            catch(Exception $e)
+            {
+                throw new Exception('Acceso denegado');
+            }
         }
         public static function ValidarPermisosMozo($request, $handler)
         {
             $cookies = $request->getCookieParams();
             $token = $cookies['JWT'];
-            AutentificadorJWT::VerificarToken($token);
-            $datos = AutentificadorJWT::ObtenerData($token);
-            if($datos->puesto == 'Mozo') 
+            try
             {
-                return $handler->handle($request);
+                AutentificadorJWT::VerificarToken($token);
+                $datos = AutentificadorJWT::ObtenerData($token);
+                if($datos->puesto == 'Mozo') 
+                {
+                    return $handler->handle($request);
+                }
             }
-            throw new Exception('Acceso denegado. No es un Mozo');
+            catch(Exception $e)
+            {
+                throw new Exception('Acceso denegado. No es un Mozo');
+            }
         }
         public static function ValidarPermisosSocio($request, $handler, $puesto = false)
         {
             $cookies = $request->getCookieParams();
             $token = $cookies['JWT'];
-            AutentificadorJWT::VerificarToken($token);
-            $datos = AutentificadorJWT::ObtenerData($token);
-            if(!$puesto && $datos->puesto == 'Socio') 
+            try
             {
-                echo "El socio " . $datos->apellido . ", " . $datos->nombre . " realizó la accion: ";
-                return $handler->handle($request);
+                AutentificadorJWT::VerificarToken($token);
+                $datos = AutentificadorJWT::ObtenerData($token);
+                if(!$puesto && $datos->puesto == 'Socio') 
+                {
+                    echo "El socio " . $datos->apellido . ", " . $datos->nombre . " realizó la accion: ";
+                    return $handler->handle($request);
+                }
             }
-            throw new Exception('Acceso denegado. NO es un Socio');
+            catch(Exception $e)
+            {
+                throw new Exception('Acceso denegado. NO es un Socio');
+            }
         }
     }
 

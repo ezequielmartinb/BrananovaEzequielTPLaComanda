@@ -81,7 +81,10 @@ class ValidarDatos
                 break;
             case array("estado"):
                 return $this->ValidarEstado($request, $requestHandler, $response);
-                break;                      
+                break;   
+            case array("logo"):
+                return $this->ValidarDatosLogo($request, $requestHandler, $response);
+                break;                     
         }   
     }    
     public function ValidarDatosAltaUsuario(Request $request, RequestHandler $requestHandler, $response)
@@ -349,9 +352,7 @@ class ValidarDatos
         }
         
         return $response;   
-    }  
-
-    
+    }     
     public function ValidarId(Request $request, RequestHandler $requestHandler, $response, $id)
     {
         $paramsGet = $request->getQueryParams();
@@ -377,5 +378,33 @@ class ValidarDatos
         }
         return $requestHandler->handle($request);
     }
+    public function ValidarDatosLogo(Request $request, RequestHandler $requestHandler, $response)
+    {
+        $uploadedFiles = $request->getUploadedFiles();       
+        
+        if(isset($uploadedFiles["logo"]))
+        {            
+            $logoIngresado = $uploadedFiles['logo'];
+            $nombreArchivo = $logoIngresado->getClientFilename();
+            $extensionDeLaFoto = strtolower(pathinfo($nombreArchivo, PATHINFO_EXTENSION));                          
+            if(($extensionDeLaFoto == 'png' || $extensionDeLaFoto == 'jpg' || $extensionDeLaFoto == 'jpeg'))
+            {
+                return $requestHandler->handle($request);     
+            }
+            else
+            {
+                $response->getBody()->write(json_encode(array("error" => "Foto subida en un formato invalido incorrecto")));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+            }
+            
+        }           
+        else
+        {
+            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+        
+        return $response;   
+    }  
 }
 ?>

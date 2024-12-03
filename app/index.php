@@ -9,6 +9,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Factory\AppFactory;
 use Slim\Routing\RouteCollectorProxy;
 use Slim\Routing\RouteContext;
+use Slim\Psr7\UploadedFile; 
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -124,5 +125,56 @@ $app->group('/encuesta', function (RouteCollectorProxy $group)
     $group->get('/traerMejoresComentarios', \EncuestaController::class . ':TraerEncuestaMejoresComentarios');
 });
 
+$app->group('/usuarios', function (RouteCollectorProxy $group)
+{
+    $group->get('/descargarUsuarios', \UsuarioController::class . ':DescargarUsuariosCsv');
+    $group->post('/cargarUsuarios', \UsuarioController::class . ':CargarUsuariosCsv');
+});
+
+// PUNTO 16
+$app->post('/PDF', function (Request $request, Response $response, array $args) 
+{
+    $uploadedFiles = $request->getUploadedFiles();
+    $logo = $uploadedFiles['logo'];
+
+    if ($logo->getError() === UPLOAD_ERR_OK) 
+    {
+        $directory = __DIR__ . '/uploads';
+        
+        if (!is_dir($directory)) 
+        {
+            mkdir($directory, 0777, true);
+        }
+
+        $extension = pathinfo($logo->getClientFilename(), PATHINFO_EXTENSION);
+        $basename = bin2hex(random_bytes(8));
+        $nombreArchivo = sprintf('%s.%0.8s', $basename, $extension);
+        $logo->moveTo($directory . DIRECTORY_SEPARATOR . $nombreArchivo);
+
+        $pdf = new FPDF();
+        $pdf->AddPage();
+        $rutaDelLogo = $directory . DIRECTORY_SEPARATOR . $nombreArchivo;
+        list($width, $height) = getimagesize($rutaDelLogo);
+        $pageWidth = $pdf->GetPageWidth();
+        $pageHeight = $pdf->GetPageHeight();
+        $x = ($pageWidth - $width) / 2;
+        $y = ($pageHeight - $height) / 2;
+        $pdf->Image($rutaDelLogo, $x, $y, $width);
+
+        $pdf->SetY($y + $height + 10);
+        $output = $pdf->Output('S'); 
+        unlink($rutaDelLogo);
+
+        $response = $response->withHeader('Content-Type', 'application/pdf')
+                             ->withHeader('Content-Disposition', 'attachment; filename="logo.pdf"')
+                             ->withBody(new Slim\Psr7\Stream(fopen('php://temp', 'r+')));
+                             
+        $response->getBody()->write($output);
+
+        return $response;
+    }
+
+    return $response->withStatus(400);
+})->add(new ValidarDatos(array("logo")))->add(\Logger::class.':ValidarPermisosSocio');
 
 $app->run();

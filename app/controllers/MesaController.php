@@ -46,12 +46,20 @@ class MesaController extends Mesa implements IApiUsable
 
   public function TraerTodos($request, $response, $args)
   {
-      $lista = Mesa::obtenerTodos();
-      $payload = json_encode(array("listaMesa" => $lista));
+    $lista = Mesa::obtenerTodos();
+    $payload = json_encode(array("listaMesa" => $lista));
 
-      $response->getBody()->write($payload);
-      return $response->withHeader('Content-Type', 'application/json');
+    $response->getBody()->write($payload);
+    return $response->withHeader('Content-Type', 'application/json');
   }
+  public function TraerMesaMasUsada($request, $response, $args)
+  {
+    $payload = json_encode(array("Mesa Mas Usada" => Mesa::obtenerMesaMasUsada()));
+
+    $response->getBody()->write($payload);
+    return $response->withHeader('Content-Type', 'application/json');
+  }
+  
   public function TraerTiempoEstimadoPorCodigoMesa($request, $response, $args)
   {
     $parametros = $request->getQueryParams();

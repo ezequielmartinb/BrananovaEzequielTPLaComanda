@@ -113,6 +113,8 @@ $app->group('/mesa', function (RouteCollectorProxy $group)
     // PUNTO 10
     $group->delete('/cerrarMesa', \MesaController::class . ':BorrarUno')->add(\Logger::class.':ValidarPermisosSocio');
     // PUNTO 13
+    $group->get('/traerMesaMasUsada', \MesaController::class . ':TraerMesaMasUsada')->add(\Logger::class.':ValidarPermisosSocio');
+
 });
 $app->group('/encuesta', function (RouteCollectorProxy $group)
 {

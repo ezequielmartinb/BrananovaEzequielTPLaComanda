@@ -55,9 +55,8 @@ class PedidoController extends Pedido implements IApiUsable
     public function TraerTiempoEstimadoPorCodigoMesayPedido($request, $response, $args)
     {
         $parametros = $request->getParsedBody();
-
         $pedido = Pedido::obtenerPedidoPorCodigoPedidoYCodigoMesa($parametros['codigoPedido'], $parametros['codigoMesa']);
-        $payload = json_encode(array("Tiempo de espera" => $pedido[0]->tiempoEstimado . ' minutos'));
+        $payload = json_encode(array("Tiempo de espera" => $pedido->tiempoEstimado . ' minutos'));
 
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
@@ -93,16 +92,16 @@ class PedidoController extends Pedido implements IApiUsable
         $pedido = Pedido::obtenerPedidoPorId($parametros['id']);
         $estado = $parametros['estado'];
         
-        if($pedido != null && $pedido->estado == 'pendiente') 
+        if($pedido != null && $pedido->estado != 'listo para servir') 
         {            
             $productosPedidos = ProductoPedido::obtenerIdPorIdPedido($pedido->id);
             $pedido->estado = $estado;   
             foreach($productosPedidos as $productoPedido)
             {
                 $productoPedido->estado = $estado;
+                ProductoPedido::modificarProductoPedido($productoPedido);
             }
             Pedido::modificarPedido($pedido);
-            ProductoPedido::modificarProductoPedido($productoPedido);
             $payload = json_encode(array("mensaje" => "Pedido se encuentra en $estado"));
         }
         else
@@ -154,6 +153,12 @@ class PedidoController extends Pedido implements IApiUsable
 
         $imagen = $uploadedFiles['fotoCliente'];
         $codigoPedido = $parametros['codigoPedido'];
+
+        $pedido = Pedido::obtenerPedidoPorCodigoPedido($codigoPedido);
+        $mesa = Mesa::obtenerMesaPorCodigoMesa($pedido->codigoMesa);
+        $mesa->idPedido = $pedido->id;
+        $mesa->modificarMesa();
+
 
         Pedido::guardarYAsociarImagen($imagen, $codigoPedido);
 

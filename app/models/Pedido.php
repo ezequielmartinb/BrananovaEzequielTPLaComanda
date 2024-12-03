@@ -33,7 +33,8 @@ class Pedido
     public static function obtenerTodos()
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, tiempoEstimado, nombreCliente, fotoCliente, estado, fechaAlta, fechaBaja FROM pedidos");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, tiempoEstimado, nombreCliente, fotoCliente, estado, fechaAlta, fechaBaja FROM pedidos WHERE estado = :estado");
+        $consulta->bindValue(':estado', 'en preparacion', PDO::PARAM_STR);
         $consulta->execute();
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
     }   
@@ -44,7 +45,7 @@ class Pedido
         $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, tiempoEstimado, nombreCliente, fotoCliente, estado, fechaAlta, fechaBaja FROM pedidos WHERE codigoPedido = :codigoPedido");
         $consulta->bindValue(':codigoPedido', $codigoPedido, PDO::PARAM_STR);
         $consulta->execute();
-        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
+        return $consulta->fetchObject('Pedido');
     }
     public static function obtenerPedidoPorCodigoMesa($codigoMesa)
     {
@@ -52,7 +53,7 @@ class Pedido
         $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, tiempoEstimado, nombreCliente, fotoCliente, estado, fechaAlta, fechaBaja FROM pedidos WHERE codigoMesa = :codigoMesa");
         $consulta->bindValue(':codigoMesa', $codigoMesa, PDO::PARAM_STR);
         $consulta->execute();
-        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
+        return $consulta->fetchObject('Pedido');
     }
     public static function obtenerPedidoPorCodigoPedidoYCodigoMesa($codigoPedido, $codigoMesa)
     {
@@ -61,7 +62,7 @@ class Pedido
         $consulta->bindValue(':codigoPedido', $codigoPedido, PDO::PARAM_STR);
         $consulta->bindValue(':codigoMesa', $codigoMesa, PDO::PARAM_STR);
         $consulta->execute();
-        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
+        return $consulta->fetchObject('Pedido');
     }
 
     public static function obtenerPedidoPorId($id)
@@ -70,7 +71,7 @@ class Pedido
         $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, tiempoEstimado, nombreCliente, fotoCliente, estado, fechaAlta, fechaBaja FROM pedidos WHERE id = :id");
         $consulta->bindValue(':id', $id, PDO::PARAM_INT);
         $consulta->execute();
-        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
+        return $consulta->fetchObject('Pedido');
     }
     public static function obtenerPedidoPorEstado($estado)
     {

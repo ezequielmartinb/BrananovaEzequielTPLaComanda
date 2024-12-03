@@ -97,11 +97,12 @@ class MesaController extends Mesa implements IApiUsable
     $parametros = $request->getParsedBody();
     $estadoPedido = $parametros['estadoPedido'];
     $estadoActualizado = $parametros['estadoActualizado'];
+    $idPedido = $parametros['idPedido'];
     
     $mesa = Mesa::obtenerPorEstadoPedido($estadoPedido);
     if($mesa != null)
     {
-      $pedido = Pedido::obtenerPedidoPorId($mesa->idPedido);
+      $pedido = Pedido::obtenerPedidoPorId($idPedido);
       $productosPedidos = ProductoPedido::obtenerTodos();
       
       foreach($productosPedidos as $productoPedido)
@@ -131,25 +132,27 @@ class MesaController extends Mesa implements IApiUsable
     $parametros = $request->getParsedBody();        
     
     $codigoMesa = $parametros['codigoMesa'];
+    $idPedido = $parametros['idPedido'];
     $mesa = Mesa::obtenerMesaPorCodigoMesa($codigoMesa);
-    $pedido = Pedido::obtenerPedidoPorCodigoMesa($codigoMesa);
+    $pedido = Pedido::obtenerPedidoPorId($idPedido);
     if($mesa != null && $pedido != null && $mesa->estado == 'comiendo')
     {      
-      $productosPedidos = ProductoPedido::obtenerIdPorIdPedido($pedido[0]->id);
+      $productosPedidos = ProductoPedido::obtenerIdPorIdPedido($idPedido);
 
       $acumuladorPrecioMesa = 0;
       foreach($productosPedidos as $productoPedido)
       {
         $producto = Producto::obtenerProductoPorId($productoPedido->idProducto);
-
-        $acumuladorPrecioMesa = $acumuladorPrecioMesa + $producto[0]->precio;
+        $productoPedido->estado = "entregado";
+        ProductoPedido::modificarProductoPedido($productoPedido);
+        $acumuladorPrecioMesa = $acumuladorPrecioMesa + $producto->precio;
       }
-      $mesa->recaudacion = $acumuladorPrecioMesa;
+      $mesa->recaudacion = $mesa->recaudacion + $acumuladorPrecioMesa;
       $mesa->estado = "disponible";
       $mesa->idPedido = null;
       $mesa->modificarMesa();
-      $pedido[0]->estado = "cobrado";      
-      Pedido::modificarPedidoEstado($pedido[0]->estado, $pedido[0]->id);
+      $pedido->estado = "cobrado";      
+      Pedido::modificarPedidoEstado($pedido->estado, $pedido->id);
       $payload = json_encode(array("mensaje" => "La mesa $codigoMesa fue cobrada con exito. La suma fue de $ $acumuladorPrecioMesa"));
     }
     else

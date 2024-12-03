@@ -18,8 +18,8 @@ class Encuesta
         $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO encuestas (idMesa, idPedido, puntosMesa, puntosRestaurante, puntosMozo, puntosCocinero, comentario, fecha) 
         VALUES (:idMesa, :idPedido, :puntosMesa, :puntosRestaurante, :puntosMozo, :puntosCocinero, :comentario, :fecha)");
         $fecha = new DateTime(date('Y-m-d'));
-        $consulta->bindValue(':idMesa', $this->idMesa, PDO::PARAM_INT);
-        $consulta->bindValue(':idPedido', $this->idPedido, PDO::PARAM_INT);
+        $consulta->bindValue(':idMesa', $this->idMesa, PDO::PARAM_STR);
+        $consulta->bindValue(':idPedido', $this->idPedido, PDO::PARAM_STR);
         $consulta->bindValue(':puntosMesa', $this->puntosMesa, PDO::PARAM_INT);
         $consulta->bindValue(':puntosRestaurante', $this->puntosRestaurante, PDO::PARAM_INT);
         $consulta->bindValue(':puntosMozo', $this->puntosMozo, PDO::PARAM_INT);

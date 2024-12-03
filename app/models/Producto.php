@@ -27,7 +27,7 @@ class Producto
         $consulta = $objAccesoDatos->prepararConsulta("SELECT id, descripcion, precio, tipo, tiempoPreparacion FROM productos");
         $consulta->execute();
 
-        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Producto');
+        return $consulta->fetchObject('Producto');
     }
 
     public static function obtenerProductoPorId($id)
@@ -37,7 +37,7 @@ class Producto
         $consulta->bindValue(':id', $id, PDO::PARAM_INT);
         $consulta->execute();
 
-        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Producto');
+        return $consulta->fetchObject('Producto');
     }
 
     public function modificarProducto($producto)

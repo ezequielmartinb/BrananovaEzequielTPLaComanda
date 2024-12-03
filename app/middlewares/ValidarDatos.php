@@ -282,7 +282,8 @@ class ValidarDatos
         {            
             $codigoPedidoIngresado = $params["codigoPedido"];             
             $codigoMesaIngresado = $params["codigoMesa"];             
-            if(is_string($codigoPedidoIngresado) && is_string($codigoMesaIngresado))
+            if(is_string($codigoPedidoIngresado) && is_string($codigoMesaIngresado) 
+            && Pedido::obtenerPedidoPorCodigoMesa($codigoMesaIngresado) != null &&  Pedido::obtenerPedidoPorCodigoPedido($codigoPedidoIngresado) != null)
             {
                 return $requestHandler->handle($request);     
             }

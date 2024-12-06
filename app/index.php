@@ -2,7 +2,7 @@
 // Error Handling
 error_reporting(-1);
 ini_set('display_errors', 1);
-
+// php -S localhost:666 -t app
 use Dotenv\Validator;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;

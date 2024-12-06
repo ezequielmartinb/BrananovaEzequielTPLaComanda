@@ -1,0 +1,1539 @@
+{
+	"info": {
+		"_postman_id": "485e645e-2fb1-49df-b434-da6b12960f5e",
+		"name": "TP LA COMANDA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37954516"
+	},
+	"item": [
+		{
+			"name": "0 - Sesiones",
+			"item": [
+				{
+					"name": "1 - Cocinero",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "mail",
+									"value": "hreyes@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "123456",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/login",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2 - Bartender",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "mail",
+									"value": "kausten@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "$2y$10$u",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/login",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3 - Cervecero",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "mail",
+									"value": "jford@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "$2y$10$2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/login",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4 - Mozo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "mail",
+									"value": "cpace@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "$2y$10$R",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/login",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5 - Socio",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "mail",
+									"value": "jshepard@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "$2y$10$e",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/login",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "1 - Tomar Pedido Copy",
+			"item": [
+				{
+					"name": "1 - Inicio Sesion con un Mozo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "mail",
+									"value": "hreyes@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "123456",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/login",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2 - Creo Un Pedido",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzMzMjQyMTEsImV4cCI6MTczMzM4NDIxMSwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjUsIm5vbWJyZSI6IkV6ZXF1aWVsIiwiYXBlbGxpZG8iOiJNYXJ0aW5leiIsInB1ZXN0byI6Ik1vem8iLCJlc3RhZG8iOiJBY3Rpdm8ifSwiYXBwIjoiTGFDb21hbmRhIn0.ldJI7EXBK_c2aYv5kwucYJXgTV9R-7KM90yfzMAeh44",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nombreCliente",
+									"value": "Franco",
+									"type": "text"
+								},
+								{
+									"key": "codigoMesa",
+									"value": "8M3X",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/pedido/crear",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"pedido",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3 - MilanesaACaballo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzMzMjQyMTEsImV4cCI6MTczMzM4NDIxMSwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjUsIm5vbWJyZSI6IkV6ZXF1aWVsIiwiYXBlbGxpZG8iOiJNYXJ0aW5leiIsInB1ZXN0byI6Ik1vem8iLCJlc3RhZG8iOiJBY3Rpdm8ifSwiYXBwIjoiTGFDb21hbmRhIn0.ldJI7EXBK_c2aYv5kwucYJXgTV9R-7KM90yfzMAeh44",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "idProducto",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "idUsuarioEncargado",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "idPedido",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/productoPedido/crear",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4 - Hamburguesa Garbanzo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM0MzU5NzgsImV4cCI6MTczMzQ5NTk3OCwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjQsIm5vbWJyZSI6IkNoYXJsaWUiLCJhcGVsbGlkbyI6IlBhY2UiLCJwdWVzdG8iOiJNb3pvIiwiZXN0YWRvIjoiQWN0aXZvIn0sImFwcCI6IkxhQ29tYW5kYSJ9.CcId9LqcCp5aC4tdu77E0AFwkA4bk6RmhUGTPDpdVWE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "idProducto",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "idUsuarioEncargado",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "idPedido",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/productoPedido/crear",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5 - Corona",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM0MzU5NzgsImV4cCI6MTczMzQ5NTk3OCwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjQsIm5vbWJyZSI6IkNoYXJsaWUiLCJhcGVsbGlkbyI6IlBhY2UiLCJwdWVzdG8iOiJNb3pvIiwiZXN0YWRvIjoiQWN0aXZvIn0sImFwcCI6IkxhQ29tYW5kYSJ9.CcId9LqcCp5aC4tdu77E0AFwkA4bk6RmhUGTPDpdVWE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "idProducto",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "idUsuarioEncargado",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "idPedido",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/productoPedido/crear",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6 - Daikiri",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM0MzU5NzgsImV4cCI6MTczMzQ5NTk3OCwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjQsIm5vbWJyZSI6IkNoYXJsaWUiLCJhcGVsbGlkbyI6IlBhY2UiLCJwdWVzdG8iOiJNb3pvIiwiZXN0YWRvIjoiQWN0aXZvIn0sImFwcCI6IkxhQ29tYW5kYSJ9.CcId9LqcCp5aC4tdu77E0AFwkA4bk6RmhUGTPDpdVWE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "idProducto",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "idUsuarioEncargado",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "idPedido",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/productoPedido/crear",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2 - Sacar Foto y Relacionarla con el Pedido",
+			"item": [
+				{
+					"name": "1 - Tomar Foto y Asociar Pedido",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzMzMjQyMTEsImV4cCI6MTczMzM4NDIxMSwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjUsIm5vbWJyZSI6IkV6ZXF1aWVsIiwiYXBlbGxpZG8iOiJNYXJ0aW5leiIsInB1ZXN0byI6Ik1vem8iLCJlc3RhZG8iOiJBY3Rpdm8ifSwiYXBwIjoiTGFDb21hbmRhIn0.ldJI7EXBK_c2aYv5kwucYJXgTV9R-7KM90yfzMAeh44",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "fotoCliente",
+									"type": "file",
+									"src": "postman-cloud:///1efa4255-3c3c-49a0-9e09-d7cdf718521c"
+								},
+								{
+									"key": "codigoPedido",
+									"value": "87Y8t",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/pedido/tomarFoto",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"pedido",
+								"tomarFoto"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3 - Listar y Cambiar Estado Pedido Pendiente",
+			"item": [
+				{
+					"name": "1 - Cocinero",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MTkyNDQsImV4cCI6MTczMzU3OTI0NCwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjMsIm5vbWJyZSI6Ikh1Z28iLCJhcGVsbGlkbyI6IlJleWVzIiwicHVlc3RvIjoiQ29jaW5lcm8iLCJlc3RhZG8iOiJBY3Rpdm8ifSwiYXBwIjoiTGFDb21hbmRhIn0.6SpzMI-_67MuJ3ucnUPV4G74NopDDl8mJ92lb34HKz8",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:666/productoPedido/traerProductoPedidosPendientesPorPuesto",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"traerProductoPedidosPendientesPorPuesto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2 - Cervecero",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MTkzMTIsImV4cCI6MTczMzU3OTMxMiwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjYsIm5vbWJyZSI6IkphbWVzIiwiYXBlbGxpZG8iOiJGb3JkIiwicHVlc3RvIjoiQ2VydmVjZXJvIiwiZXN0YWRvIjoiQWN0aXZvIn0sImFwcCI6IkxhQ29tYW5kYSJ9.pG44by6pxnKtJnEiRVnMY3RXRfWIs7RVz_5fSGbbJiA",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:666/productoPedido/traerProductoPedidosPendientesPorPuesto",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"traerProductoPedidosPendientesPorPuesto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3 - Bartender",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzMzMTk2NzgsImV4cCI6MTczMzM3OTY3OCwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjUsIm5vbWJyZSI6IkV6ZXF1aWVsIiwiYXBlbGxpZG8iOiJNYXJ0aW5leiIsInB1ZXN0byI6Ik1vem8iLCJlc3RhZG8iOiJBY3Rpdm8ifSwiYXBwIjoiTGFDb21hbmRhIn0.4aMPxHA8hopxAbt64wPpznq5N0ZYDaH48zRGlK40Go",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:666/productoPedido/traerProductoPedidosPendientesPorPuesto",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"traerProductoPedidosPendientesPorPuesto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4 - Cambiar Estado Milanesa a Caballo",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM0MzcxNzgsImV4cCI6MTczMzQ5NzE3OCwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjMsIm5vbWJyZSI6Ikh1Z28iLCJhcGVsbGlkbyI6IlJleWVzIiwicHVlc3RvIjoiQ29jaW5lcm8iLCJlc3RhZG8iOiJBY3Rpdm8ifSwiYXBwIjoiTGFDb21hbmRhIn0.wPzCfVVGsQywrg6Dy2SdhZoyEGjdqdU-iHt9Yx8JjAE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "idProductoPedido",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "estado",
+									"value": "en preparacion",
+									"type": "text"
+								},
+								{
+									"key": "tiempoPreparacion",
+									"value": "15",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/productoPedido/modificarEstadoYTiempoPreparacion",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"modificarEstadoYTiempoPreparacion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5 - Cambiar Estado Hamburguesa Garbanzo",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM0MzcxNzgsImV4cCI6MTczMzQ5NzE3OCwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjMsIm5vbWJyZSI6Ikh1Z28iLCJhcGVsbGlkbyI6IlJleWVzIiwicHVlc3RvIjoiQ29jaW5lcm8iLCJlc3RhZG8iOiJBY3Rpdm8ifSwiYXBwIjoiTGFDb21hbmRhIn0.wPzCfVVGsQywrg6Dy2SdhZoyEGjdqdU-iHt9Yx8JjAE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "idProductoPedido",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "estado",
+									"value": "en preparacion",
+									"type": "text"
+								},
+								{
+									"key": "tiempoPreparacion",
+									"value": "10",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/productoPedido/modificarEstadoYTiempoPreparacion",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"modificarEstadoYTiempoPreparacion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6 - Cambiar Estado Hamburguesa Garbanzo",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM0MzcxNzgsImV4cCI6MTczMzQ5NzE3OCwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjMsIm5vbWJyZSI6Ikh1Z28iLCJhcGVsbGlkbyI6IlJleWVzIiwicHVlc3RvIjoiQ29jaW5lcm8iLCJlc3RhZG8iOiJBY3Rpdm8ifSwiYXBwIjoiTGFDb21hbmRhIn0.wPzCfVVGsQywrg6Dy2SdhZoyEGjdqdU-iHt9Yx8JjAE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "idProductoPedido",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "estado",
+									"value": "en preparacion",
+									"type": "text"
+								},
+								{
+									"key": "tiempoPreparacion",
+									"value": "10",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/productoPedido/modificarEstadoYTiempoPreparacion",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"modificarEstadoYTiempoPreparacion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7 - Cambiar Estado Corona",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM0MzkzNzMsImV4cCI6MTczMzQ5OTM3MywiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjYsIm5vbWJyZSI6IkphbWVzIiwiYXBlbGxpZG8iOiJGb3JkIiwicHVlc3RvIjoiQ2VydmVjZXJvIiwiZXN0YWRvIjoiQWN0aXZvIn0sImFwcCI6IkxhQ29tYW5kYSJ9.6C3kOvICQpkWISW3O7S8J2eZqQH8EQeYFFVkrdy80fc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "idProductoPedido",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "estado",
+									"value": "en preparacion",
+									"type": "text"
+								},
+								{
+									"key": "tiempoPreparacion",
+									"value": "5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/productoPedido/modificarEstadoYTiempoPreparacion",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"modificarEstadoYTiempoPreparacion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8 - Cambiar Estado Daikiri",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM0Mzk0MDUsImV4cCI6MTczMzQ5OTQwNSwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjIsIm5vbWJyZSI6IkthdGhlcmluZSIsImFwZWxsaWRvIjoiQXVzdGVuIiwicHVlc3RvIjoiQmFydGVuZGVyIiwiZXN0YWRvIjoiQWN0aXZvIn0sImFwcCI6IkxhQ29tYW5kYSJ9.fWZzEtF0ZvntJsQfqkfT382iYfkwnuFOkv-_TU24uBY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "idProductoPedido",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "estado",
+									"value": "en preparacion",
+									"type": "text"
+								},
+								{
+									"key": "tiempoPreparacion",
+									"value": "5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/productoPedido/modificarEstadoYTiempoPreparacion",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"modificarEstadoYTiempoPreparacion"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4 - Ver Tiempo Demora Pedido",
+			"item": [
+				{
+					"name": "1 - Traer Tiempo Estimado del Pedido",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "codigoPedido",
+									"value": "87Y8t",
+									"type": "text"
+								},
+								{
+									"key": "codigoMesa",
+									"value": "8M3X",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/pedido/traerPedidoPorCodigoMesaYPedido",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"pedido",
+								"traerPedidoPorCodigoMesaYPedido"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "5 - Socios Listado Pedido y Tiempo Demora",
+			"item": [
+				{
+					"name": "1 - Traer Listado Pedidos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM0Mzk5NTAsImV4cCI6MTczMzQ5OTk1MCwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjEsIm5vbWJyZSI6IkphY2siLCJhcGVsbGlkbyI6IlNoZXBhcmQiLCJwdWVzdG8iOiJTb2NpbyIsImVzdGFkbyI6IkFjdGl2byJ9LCJhcHAiOiJMYUNvbWFuZGEifQ.auXzJvpeWJdmGPY8LfBV18-co5l3trzV-Rh_PsW_rmQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:666/pedido/socio",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"pedido",
+								"socio"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "6 - Listar y Cambiar Estado Pedido En Preparacion",
+			"item": [
+				{
+					"name": "1 - Cocinero",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MTkyNDQsImV4cCI6MTczMzU3OTI0NCwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjMsIm5vbWJyZSI6Ikh1Z28iLCJhcGVsbGlkbyI6IlJleWVzIiwicHVlc3RvIjoiQ29jaW5lcm8iLCJlc3RhZG8iOiJBY3Rpdm8ifSwiYXBwIjoiTGFDb21hbmRhIn0.6SpzMI-_67MuJ3ucnUPV4G74NopDDl8mJ92lb34HKz8",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:666/productoPedido/traerProductoPedidosEnPreparacionPorPuesto",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"traerProductoPedidosEnPreparacionPorPuesto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2 - Cervecero",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MTkzMTIsImV4cCI6MTczMzU3OTMxMiwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjYsIm5vbWJyZSI6IkphbWVzIiwiYXBlbGxpZG8iOiJGb3JkIiwicHVlc3RvIjoiQ2VydmVjZXJvIiwiZXN0YWRvIjoiQWN0aXZvIn0sImFwcCI6IkxhQ29tYW5kYSJ9.pG44by6pxnKtJnEiRVnMY3RXRfWIs7RVz_5fSGbbJiA",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:666/productoPedido/traerProductoPedidosEnPreparacionPorPuesto",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"traerProductoPedidosEnPreparacionPorPuesto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3 - Bartender",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzMzMTk2NzgsImV4cCI6MTczMzM3OTY3OCwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjUsIm5vbWJyZSI6IkV6ZXF1aWVsIiwiYXBlbGxpZG8iOiJNYXJ0aW5leiIsInB1ZXN0byI6Ik1vem8iLCJlc3RhZG8iOiJBY3Rpdm8ifSwiYXBwIjoiTGFDb21hbmRhIn0.4aMPxHA8hopxAbt64wPpznq5N0ZYDaH48zRGlK40Go",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:666/productoPedido/traerProductoPedidosEnPreparacionPorPuesto",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"traerProductoPedidosEnPreparacionPorPuesto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4 - Cambiar Estado Milanesa a Caballo",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MTk2ODksImV4cCI6MTczMzU3OTY4OSwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjMsIm5vbWJyZSI6Ikh1Z28iLCJhcGVsbGlkbyI6IlJleWVzIiwicHVlc3RvIjoiQ29jaW5lcm8iLCJlc3RhZG8iOiJBY3Rpdm8ifSwiYXBwIjoiTGFDb21hbmRhIn0.9gPjfn79-ZJqRvNsuFsqtHv5QDNIoy_pqmXvmzCU7qY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "idProductoPedido",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "estado",
+									"value": "listo para servir",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/productoPedido/modificarEstado",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"modificarEstado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5 - Cambiar Estado Hamburguesa Garbanzo",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MTk2ODksImV4cCI6MTczMzU3OTY4OSwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjMsIm5vbWJyZSI6Ikh1Z28iLCJhcGVsbGlkbyI6IlJleWVzIiwicHVlc3RvIjoiQ29jaW5lcm8iLCJlc3RhZG8iOiJBY3Rpdm8ifSwiYXBwIjoiTGFDb21hbmRhIn0.9gPjfn79-ZJqRvNsuFsqtHv5QDNIoy_pqmXvmzCU7qY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "idProductoPedido",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "estado",
+									"value": "listo para servir",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/productoPedido/modificarEstado",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"modificarEstado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6 - Cambiar Estado Hamburguesa Garbanzo",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MTk2ODksImV4cCI6MTczMzU3OTY4OSwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjMsIm5vbWJyZSI6Ikh1Z28iLCJhcGVsbGlkbyI6IlJleWVzIiwicHVlc3RvIjoiQ29jaW5lcm8iLCJlc3RhZG8iOiJBY3Rpdm8ifSwiYXBwIjoiTGFDb21hbmRhIn0.9gPjfn79-ZJqRvNsuFsqtHv5QDNIoy_pqmXvmzCU7qY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "idProductoPedido",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "estado",
+									"value": "listo para servir",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/productoPedido/modificarEstado",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"modificarEstado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7 - Cambiar Estado Corona",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MTk5MDAsImV4cCI6MTczMzU3OTkwMCwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjYsIm5vbWJyZSI6IkphbWVzIiwiYXBlbGxpZG8iOiJGb3JkIiwicHVlc3RvIjoiQ2VydmVjZXJvIiwiZXN0YWRvIjoiQWN0aXZvIn0sImFwcCI6IkxhQ29tYW5kYSJ9.JdTQwkZhTO9YO_4N0-ukwaIxWqLmt7QPLiGsj4pc6qA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "idProductoPedido",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "estado",
+									"value": "listo para servir",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/productoPedido/modificarEstado",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"modificarEstado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8 - Cambiar Estado Daikiri",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MjAzNjksImV4cCI6MTczMzU4MDM2OSwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjIsIm5vbWJyZSI6IkthdGhlcmluZSIsImFwZWxsaWRvIjoiQXVzdGVuIiwicHVlc3RvIjoiQmFydGVuZGVyIiwiZXN0YWRvIjoiQWN0aXZvIn0sImFwcCI6IkxhQ29tYW5kYSJ9.9SpgG-8c2-gOS5mBPSsYR4fTkBGjZYtS-5l_3tDgNqo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "idProductoPedido",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "estado",
+									"value": "listo para servir",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/productoPedido/modificarEstado",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productoPedido",
+								"modificarEstado"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "7 - Cambiar Estado Mesa",
+			"item": [
+				{
+					"name": "1 - ModificarEstadoMesa",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MjE1MTksImV4cCI6MTczMzU4MTUxOSwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjQsIm5vbWJyZSI6IkNoYXJsaWUiLCJhcGVsbGlkbyI6IlBhY2UiLCJwdWVzdG8iOiJNb3pvIiwiZXN0YWRvIjoiQWN0aXZvIn0sImFwcCI6IkxhQ29tYW5kYSJ9.FTKNTyJGoTib4rWL3moYJpcJ6aUa9BPNX81b8seULtk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "estadoPedido",
+									"value": "listo para servir",
+									"type": "text"
+								},
+								{
+									"key": "estadoActualizado",
+									"value": "comiendo",
+									"type": "text"
+								},
+								{
+									"key": "idPedido",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/mesa/modificarEstadoMesa",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"mesa",
+								"modificarEstadoMesa"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "8 - Socios Listan Mesas con sus Estados",
+			"item": [
+				{
+					"name": "1 - Traer Lista Mesas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MjIxNzIsImV4cCI6MTczMzU4MjE3MiwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjEsIm5vbWJyZSI6IkphY2siLCJhcGVsbGlkbyI6IlNoZXBhcmQiLCJwdWVzdG8iOiJTb2NpbyIsImVzdGFkbyI6IkFjdGl2byJ9LCJhcHAiOiJMYUNvbWFuZGEifQ.FZ06U9M1oR6hfcWNPBE-T1MITxaRNCDedrGxjHClufU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:666/mesa/socio",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"mesa",
+								"socio"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "9 - Cobrar Mesa",
+			"item": [
+				{
+					"name": "1 - Cobrar Mesa",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MjE1MTksImV4cCI6MTczMzU4MTUxOSwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjQsIm5vbWJyZSI6IkNoYXJsaWUiLCJhcGVsbGlkbyI6IlBhY2UiLCJwdWVzdG8iOiJNb3pvIiwiZXN0YWRvIjoiQWN0aXZvIn0sImFwcCI6IkxhQ29tYW5kYSJ9.FTKNTyJGoTib4rWL3moYJpcJ6aUa9BPNX81b8seULtk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "codigoMesa",
+									"value": "8M3X",
+									"type": "text"
+								},
+								{
+									"key": "idPedido",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/mesa/cobrarMesa",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"mesa",
+								"cobrarMesa"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "10 - Socio Cierra Mesa",
+			"item": [
+				{
+					"name": "1 - Cerrar Mesa",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MjMxNDgsImV4cCI6MTczMzU4MzE0OCwiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjEsIm5vbWJyZSI6IkphY2siLCJhcGVsbGlkbyI6IlNoZXBhcmQiLCJwdWVzdG8iOiJTb2NpbyIsImVzdGFkbyI6IkFjdGl2byJ9LCJhcHAiOiJMYUNvbWFuZGEifQ.BHzQQmILQ38NyIIZHJBe1MLbw31RmCzIfocI0-wzEbM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "codigoMesa",
+									"value": "45PM",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/mesa/cerrarMesa",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"mesa",
+								"cerrarMesa"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "11 - Completa Encuesta",
+			"item": [
+				{
+					"name": "1 - Completar Encuesta",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "codigoMesa",
+									"value": "8M3X",
+									"type": "text"
+								},
+								{
+									"key": "codigoPedido",
+									"value": "87Y8t",
+									"type": "text"
+								},
+								{
+									"key": "puntosMesa",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "puntosRestaurante",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "puntosMozo",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "puntosCocinero",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "comentario",
+									"value": "Deliciosa la comida. 10/10",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/encuesta/completarEncuesta",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"encuesta",
+								"completarEncuesta"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "12 - Mejores Comentarios",
+			"item": [
+				{
+					"name": "Traer Mejores Comentarios",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MjQ5MTcsImV4cCI6MTczMzU4NDkxNywiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjEsIm5vbWJyZSI6IkphY2siLCJhcGVsbGlkbyI6IlNoZXBhcmQiLCJwdWVzdG8iOiJTb2NpbyIsImVzdGFkbyI6IkFjdGl2byJ9LCJhcHAiOiJMYUNvbWFuZGEifQ.KLM73kONZa473w6rxQApbFpgpvI7Gsxk4ssYD3Bmn7I",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:666/encuesta/traerMejoresComentarios",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"encuesta",
+								"traerMejoresComentarios"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "13 - Mesa más Usada",
+			"item": [
+				{
+					"name": "1 - Traer la Mesa más Usada",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MjQ5MTcsImV4cCI6MTczMzU4NDkxNywiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjEsIm5vbWJyZSI6IkphY2siLCJhcGVsbGlkbyI6IlNoZXBhcmQiLCJwdWVzdG8iOiJTb2NpbyIsImVzdGFkbyI6IkFjdGl2byJ9LCJhcHAiOiJMYUNvbWFuZGEifQ.KLM73kONZa473w6rxQApbFpgpvI7Gsxk4ssYD3Bmn7I",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:666/mesa/traerMesaMasUsada",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"mesa",
+								"traerMesaMasUsada"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "14 - Traer Pedidos no Entregados en el Tiempo Estipulado",
+			"item": [
+				{
+					"name": "1 - Traer Pedidos no Entregados en el Tiempo Estipulado",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MjQ5MTcsImV4cCI6MTczMzU4NDkxNywiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjEsIm5vbWJyZSI6IkphY2siLCJhcGVsbGlkbyI6IlNoZXBhcmQiLCJwdWVzdG8iOiJTb2NpbyIsImVzdGFkbyI6IkFjdGl2byJ9LCJhcHAiOiJMYUNvbWFuZGEifQ.KLM73kONZa473w6rxQApbFpgpvI7Gsxk4ssYD3Bmn7I",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "localhost:666/pedido/traerPedidosNoEntregadosEnElTiempoEstipulado",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"pedido",
+								"traerPedidosNoEntregadosEnElTiempoEstipulado"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "15 - Traer Productos no Entregados en el Tiempo Estipulado",
+			"item": [
+				{
+					"name": "1 - Traer Productos no Entregados en el Tiempo Estipulado",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MjQ5MTcsImV4cCI6MTczMzU4NDkxNywiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjEsIm5vbWJyZSI6IkphY2siLCJhcGVsbGlkbyI6IlNoZXBhcmQiLCJwdWVzdG8iOiJTb2NpbyIsImVzdGFkbyI6IkFjdGl2byJ9LCJhcHAiOiJMYUNvbWFuZGEifQ.KLM73kONZa473w6rxQApbFpgpvI7Gsxk4ssYD3Bmn7I",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "localhost:666/producto/traerProductosNoEntregadosEnElTiempoEstipulado",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"producto",
+								"traerProductosNoEntregadosEnElTiempoEstipulado"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "16 - Descargar PDF con logo empresa",
+			"item": [
+				{
+					"name": "1 - Cargar Logo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzM1MjQ5MTcsImV4cCI6MTczMzU4NDkxNywiYXVkIjoiNzc2ZTg4ZjAxMTIyNDc3MzA1NWFkZmI2N2VmMjJhNzljOTQyNTA3MiIsImRhdGEiOnsiaWQiOjEsIm5vbWJyZSI6IkphY2siLCJhcGVsbGlkbyI6IlNoZXBhcmQiLCJwdWVzdG8iOiJTb2NpbyIsImVzdGFkbyI6IkFjdGl2byJ9LCJhcHAiOiJMYUNvbWFuZGEifQ.KLM73kONZa473w6rxQApbFpgpvI7Gsxk4ssYD3Bmn7I",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "logo",
+									"type": "file",
+									"src": "postman-cloud:///1efb1a31-ddad-4140-a825-184d72c6fd58"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:666/PDF",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"PDF"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

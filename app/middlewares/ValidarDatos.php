@@ -55,7 +55,7 @@ class ValidarDatos
             case array("estado", "idMozoAsignado"):
                 return $this->ValidarDatosAltaMesa($request, $requestHandler, $response);
                 break;  
-            case array("idProducto", "idPedido", "idUsuario"):
+            case array("idProducto", "idPedido", "idUsuarioEncargado"):
                 return $this->ValidarDatosAltaProductoPedido($request, $requestHandler, $response);
                 break; 
             case array("nombreCliente", "codigoMesa"):
@@ -79,9 +79,21 @@ class ValidarDatos
             case array("puesto"):
                 return $this->ValidarPuesto($request, $requestHandler, $response);
                 break;
+            case array("estado", "tiempoPreparacion"):
+                return $this->ValidarEstadoYTiempoPreparacion($request, $requestHandler, $response);
+                break;
             case array("estado"):
                 return $this->ValidarEstado($request, $requestHandler, $response);
-                break;   
+                break;  
+            case array("estadoPedido", "estadoActualizado"):
+                return $this->ValidarModificarMesa($request, $requestHandler, $response);
+                break;  
+            case array("codigoMesa"):
+                return $this->ValidarCodigoMesaMesa($request, $requestHandler, $response);
+                break;    
+            case array("codigoMesa", "codigoPedido","puntosMesa", "puntosRestaurante", "puntosMozo", "puntosCocinero", "comentario"):
+                return $this->ValidarDatosEncuesta($request, $requestHandler, $response);
+                break;     
             case array("logo"):
                 return $this->ValidarDatosLogo($request, $requestHandler, $response);
                 break;                     
@@ -199,13 +211,14 @@ class ValidarDatos
     {
         $params = $request->getParsedBody();        
         
-        if(isset($params["idProducto"]) && isset($params["idUsuario"]) && isset($params["idPedido"]))
-        {            
+        if(isset($params["idProducto"]) && isset($params["idUsuarioEncargado"]) && isset($params["idPedido"]))
+        {          
             $idProductoIngresado = $params["idProducto"];             
-            $idUsuarioIngresado = $params["idUsuario"];             
+            $idUsuarioEncargadoIngresado = $params["idUsuarioEncargado"];             
             $idPedidoIngresado = $params["idPedido"];             
-            if(intval($idPedidoIngresado) && intval($idProductoIngresado) && intval($idUsuarioIngresado)
-            && Usuario::obtenerUsuarioPorId($idUsuarioIngresado) != null && Producto::obtenerProductoPorId($idProductoIngresado) != null && Pedido::obtenerPedidoPorId($idPedidoIngresado) != null) 
+            if(intval($idPedidoIngresado) && intval($idProductoIngresado) && intval($idUsuarioEncargadoIngresado)
+            && Usuario::obtenerUsuarioPorId($idUsuarioEncargadoIngresado) != null && Producto::obtenerProductoPorId($idProductoIngresado) != null 
+            && Pedido::obtenerPedidoPorId($idPedidoIngresado) != null) 
             {                
                 return $requestHandler->handle($request);                
             }
@@ -328,20 +341,22 @@ class ValidarDatos
         
         return $response;   
     }   
-    public function ValidarEstado(Request $request, RequestHandler $requestHandler, $response)
+    public function ValidarEstadoYTiempoPreparacion(Request $request, RequestHandler $requestHandler, $response)
     {
         $params = $request->getParsedBody(); 
         
-        if(isset($params["estado"]))
+        if(isset($params["estado"]) && isset($params["tiempoPreparacion"]))
         {            
-            $estadoIngresado = $params["estado"];             
-            if(is_string($estadoIngresado) && ($estadoIngresado == 'pendiente' || $estadoIngresado == 'listo para servir'))
+            $estadoIngresado = $params["estado"];
+            $tiempoPreparacionIngresado = $params["tiempoPreparacion"];             
+            if(is_string($estadoIngresado) && intval($tiempoPreparacionIngresado) && intval($tiempoPreparacionIngresado) > 0
+            && ($estadoIngresado == 'pendiente' || $estadoIngresado == 'en preparacion' || $estadoIngresado == 'listo para servir'))
             {
                 return $requestHandler->handle($request);     
             }
             else
             {
-                $response->getBody()->write(json_encode(array("error" => "Estado ingresado incorrecto")));
+                $response->getBody()->write(json_encode(array("error" => "Estado o Tiempo Preparacion ingresado incorrecto")));
                 return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
             }
             
@@ -354,6 +369,31 @@ class ValidarDatos
         
         return $response;   
     }     
+    public function ValidarEstado(Request $request, RequestHandler $requestHandler, $response)
+    {
+        $params = $request->getParsedBody(); 
+        
+        if(isset($params["estado"]))
+        {            
+            $estadoIngresado = $params["estado"];
+            if(is_string($estadoIngresado) && ($estadoIngresado == 'pendiente' || $estadoIngresado == 'en preparacion' || $estadoIngresado == 'listo para servir'))
+            {
+                return $requestHandler->handle($request);     
+            }
+            else
+            {
+                $response->getBody()->write(json_encode(array("error" => "Estado ingresado incorrecto")));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+            }            
+        }           
+        else
+        {
+            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+        
+        return $response;   
+    }  
     public function ValidarId(Request $request, RequestHandler $requestHandler, $response, $id)
     {
         $paramsGet = $request->getQueryParams();
@@ -379,6 +419,77 @@ class ValidarDatos
         }
         return $requestHandler->handle($request);
     }
+    public function ValidarModificarMesa(Request $request, RequestHandler $requestHandler, $response)
+    {
+        $params = $request->getParsedBody();        
+        if(isset($params["estadoPedido"]) && isset($params["estadoActualizado"]))
+        {            
+            $estadoPedidoIngresado = $params["estadoPedido"];
+            $estadoActualizadoIngresado = $params["estadoActualizado"];
+            if(is_string($estadoPedidoIngresado) && $estadoPedidoIngresado == 'listo para servir' 
+            && is_string($estadoActualizadoIngresado) && $estadoActualizadoIngresado == 'comiendo')
+            {
+                return $requestHandler->handle($request);     
+            }
+            else
+            {
+                $response->getBody()->write(json_encode(array("error" => "Estados ingresados incorrecto")));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+            }            
+        }           
+        else
+        {
+            echo "entre al else";
+            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+        
+        return $response;   
+    }  
+    public function ValidarCodigoMesaMesa(Request $request, RequestHandler $requestHandler, $response)
+    {
+        $params = $request->getParsedBody(); 
+        $codigoMesaIngresado = $params['codigoMesa']; 
+
+        if(isset($codigoMesaIngresado) && !preg_match('/^[a-zA-Z0-9]+$/', $codigoMesaIngresado)) 
+        { 
+            $payload = json_encode(array("error" => "El código de mesa solo puede contener números y letras."));
+            $response->getBody()->write($payload); 
+            return $response->withHeader('Content-Type', 'application/json'); 
+        } 
+
+        return $requestHandler->handle($request);
+    }
+    public function ValidarDatosEncuesta(Request $request, RequestHandler $requestHandler, $response)
+{
+    $params = $request->getParsedBody(); 
+    $codigoMesaIngresado = $params['codigoMesa']; 
+    $codigoPedidoIngresado = $params['codigoPedido']; 
+    $puntosMesaIngresado = $params['puntosMesa']; 
+    $puntosRestauranteIngresado = $params['puntosRestaurante']; 
+    $puntosMozoIngresado = $params['puntosMozo']; 
+    $puntosCocineroIngresado = $params['puntosCocinero']; 
+    $comentarioIngresado = $params['comentario']; 
+
+    if (!isset($codigoMesaIngresado) || !preg_match('/^[a-zA-Z0-9]+$/', $codigoMesaIngresado) ||
+        !isset($codigoPedidoIngresado) || !preg_match('/^[a-zA-Z0-9]+$/', $codigoPedidoIngresado) ||
+        !isset($puntosMesaIngresado) || !intval($puntosMesaIngresado) ||
+        !isset($puntosRestauranteIngresado) || !intval($puntosRestauranteIngresado) ||
+        !isset($puntosMozoIngresado) || !intval($puntosMozoIngresado) ||
+        !isset($puntosCocineroIngresado) || !intval($puntosCocineroIngresado) ||
+        !isset($comentarioIngresado) || !is_string($comentarioIngresado) || strlen($comentarioIngresado) > 66 ||
+        Pedido::obtenerPedidoPorCodigoPedido($codigoPedidoIngresado) == null || Encuesta::obtenerEncuestaPorCodigoPedido($codigoPedidoIngresado) == null ||
+        Mesa::obtenerMesaPorCodigoMesa($codigoMesaIngresado) == null || Encuesta::obtenerEncuestaPorCodigoMesa($codigoMesaIngresado) == null) 
+    {
+        $payload = json_encode(array("error" => "Los datos ingresados no son válidos. Asegúrese de que el código de mesa solo contenga números y letras, todos los puntos sean enteros, y el comentario no exceda los 66 caracteres."));
+        $response->getBody()->write($payload); 
+        return $response->withHeader('Content-Type', 'application/json'); 
+    }
+
+    return $requestHandler->handle($request);
+}
+
+
     public function ValidarDatosLogo(Request $request, RequestHandler $requestHandler, $response)
     {
         $uploadedFiles = $request->getUploadedFiles();       

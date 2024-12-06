@@ -11,18 +11,12 @@ class PedidoController extends Pedido implements IApiUsable
         $parametros = $request->getParsedBody(); 
         
         $nombreCliente = $parametros['nombreCliente'];
-        $tiempoEstimado = 0;
         $codigoMesa = $parametros['codigoMesa'];
         $pedido = new Pedido();
         $pedido->nombreCliente = $nombreCliente;
-        $pedido->tiempoEstimado = $tiempoEstimado;
         $pedido->codigoMesa = $codigoMesa;
         $pedido->crearPedido();
-        $payload = json_encode(array("mensaje" => "Pedido creado con exito"));
-        $pedidoDB = Pedido::obtenerPedidoPorCodigoMesa($codigoMesa);
-        $mesa = Mesa::obtenerMesaPorCodigoMesa($codigoMesa);
-        $mesa->idPedido = $pedidoDB[0]->id;
-        $mesa->modificarMesa();
+        $payload = json_encode(array("mensaje" => "Pedido creado con exito"));        
         
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
@@ -56,11 +50,29 @@ class PedidoController extends Pedido implements IApiUsable
     {
         $parametros = $request->getParsedBody();
         $pedido = Pedido::obtenerPedidoPorCodigoPedidoYCodigoMesa($parametros['codigoPedido'], $parametros['codigoMesa']);
-        $payload = json_encode(array("Tiempo de espera" => $pedido->tiempoEstimado . ' minutos'));
+        $tiempoEstimado = new DateTime($pedido->horaEstimadaFinal);
+        $payload = json_encode(array("Horario de entrega" => $tiempoEstimado->format('H:i:s')));
 
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
     }
+    public function TraerPedidosNoEntregadosEnElTiempoEstipulado($request, $response, $args)
+    {
+        $pedidos = Pedido::obtenerTodos();
+        $pedidosNoEntregadosEnElTiempoEstipulado = [];
+        foreach($pedidos as $pedido)
+        {
+            if($pedido->horaEstimadaFinal != $pedido->horaFinal)
+            {
+                array_push($pedidosNoEntregadosEnElTiempoEstipulado, $pedido);
+            }
+        }
+        $payload = json_encode(array("Lista de Pedidos no entregados en el tiempo estipulado" => $pedidosNoEntregadosEnElTiempoEstipulado));
+
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
     
     public function ModificarUno($request, $response, $args)
     {

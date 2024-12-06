@@ -9,14 +9,12 @@ class ProductoController extends Producto implements IApiUsable
     $parametros = $request->getParsedBody();
     $descripcion = $parametros['descripcion'];
     $precio = $parametros['precio'];
-    $tipo = $parametros['tipo'];
-    $tiempoPreparacion = $parametros['tiempoPreparacion'];    
+    $sector = $parametros['sector'];
     
     $producto = new Producto();
     $producto->descripcion = $descripcion;
     $producto->precio = $precio;
-    $producto->tipo = $tipo;
-    $producto->tiempoPreparacion = $tiempoPreparacion;
+    $producto->sector = $sector;
     $producto->crearProducto();
 
     $payload = json_encode(array("mensaje" => "Producto creado con exito"));     
@@ -52,6 +50,27 @@ class ProductoController extends Producto implements IApiUsable
       $response->getBody()->write($payload);
       return $response->withHeader('Content-Type', 'application/json');
   }
+  public function TraerProductosNoEntregadosEnElTiempoEstipulado($request, $response, $args)
+    {
+        $pedidos = Pedido::obtenerTodos();
+        $productosNoEntregadosEnElTiempoEstipulado = [];
+        foreach($pedidos as $pedido)
+        {
+            if($pedido->horaEstimadaFinal != $pedido->horaFinal)
+            {
+              $productosPedidos = ProductoPedido::obtenerIdPorIdPedido($pedido->id);
+              foreach($productosPedidos as $productoPedido)
+              {
+                $producto = Producto::obtenerProductoPorId($productoPedido->idProducto);
+                array_push($productosNoEntregadosEnElTiempoEstipulado, $producto);
+              }
+            }
+        }
+        $payload = json_encode(array("Lista de Productos no entregados en el tiempo estipulado" => $productosNoEntregadosEnElTiempoEstipulado));
+
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
+    }
   
   public function ModificarUno($request, $response, $args)
   {
@@ -63,8 +82,7 @@ class ProductoController extends Producto implements IApiUsable
       
       $producto->descripcion = $parametros['descripcion'];          
       $producto->precio = $parametros['precio'];    
-      $producto->tipo = $parametros['tipo'];          
-      $producto->tiempoPreparacion = $parametros['tiempoPreparacion'];               
+      $producto->sector = $parametros['sector'];          
 
       Producto::modificarProducto($producto);
 

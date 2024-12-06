@@ -29,7 +29,7 @@ class MesaController extends Mesa implements IApiUsable
     $parametros = $request->getQueryParams();
     
     $id = $parametros['id'];          
-    $mesa = mesa::obtenerMesaPorId($id);
+    $mesa = Mesa::obtenerMesaPorId($id);
     if($mesa!=null)
     {
       $payload = json_encode($mesa);
@@ -113,7 +113,7 @@ class MesaController extends Mesa implements IApiUsable
           ProductoPedido::modificarProductoPedido($productoPedido);
         }
       }
-      $pedido->estado = $parametros['estadoActualizado'];
+      $pedido->estado = "entregado";
       Pedido::modificarPedido($pedido);
       $mesa->estado = $estadoActualizado;
       $mesa->modificarMesa();
@@ -142,9 +142,7 @@ class MesaController extends Mesa implements IApiUsable
       $acumuladorPrecioMesa = 0;
       foreach($productosPedidos as $productoPedido)
       {
-        $producto = Producto::obtenerProductoPorId($productoPedido->idProducto);
-        $productoPedido->estado = "entregado";
-        ProductoPedido::modificarProductoPedido($productoPedido);
+        $producto = Producto::obtenerProductoPorId($productoPedido->idProducto);        
         $acumuladorPrecioMesa = $acumuladorPrecioMesa + $producto->precio;
       }
       $mesa->recaudacion = $mesa->recaudacion + $acumuladorPrecioMesa;

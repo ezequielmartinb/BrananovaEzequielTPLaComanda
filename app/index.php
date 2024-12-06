@@ -3,134 +3,122 @@
 error_reporting(-1);
 ini_set('display_errors', 1);
 
+use Dotenv\Validator;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Factory\AppFactory;
 use Slim\Routing\RouteCollectorProxy;
 use Slim\Routing\RouteContext;
-use Slim\Psr7\UploadedFile; 
 
 require __DIR__ . '/../vendor/autoload.php';
 
 require_once './db/AccesoDatos.php';
-
-// MW
 require_once './middlewares/Logger.php';
 require_once './middlewares/ValidarDatos.php';
 
-
-// CONTROLLER
 require_once './controllers/UsuarioController.php';
 require_once './controllers/ProductoController.php';
-require_once './controllers/MesaController.php';
-require_once './controllers/PedidoController.php';
 require_once './controllers/ProductoPedidoController.php';
+require_once './controllers/PedidoController.php';
+require_once './controllers/MesaController.php';
 require_once './controllers/EncuestaController.php';
 
+// Load ENV
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
+
+// Instantiate App
 $app = AppFactory::create();
+
+// Add error middleware
 $app->addErrorMiddleware(true, true, true);
+
+// Add parse body
 $app->addBodyParsingMiddleware();
-
-//SPRINTS
-
-//SPRINT 1
-// $app->group('/usuarios', function (RouteCollectorProxy $group) 
-// {
-//     $group->get('[/]', \UsuarioController::class . ':TraerTodos');
-//     $group->get('/traer', \UsuarioController::class . ':TraerUno')->add(new ValidarDatos(array("id")));
-//     $group->post('/crear', \UsuarioController::class . ':CargarUno')->add(new ValidarDatos(array("nombre", "apellido", "mail", "puesto", "estado")));    
-// });
-// $app->group('/producto', function (RouteCollectorProxy $group) 
-// {
-//     $group->get('[/]', \ProductoController::class . ':TraerTodos');
-//     $group->get('/traer', \ProductoController::class . ':TraerUno')->add(new ValidarDatos(array("id")));
-//     $group->post('/crear', \ProductoController::class . ':CargarUno')->add(new ValidarDatos(array("descripcion", "tipo", "precio", "tiempoPreparacion")));    
-// });
-// $app->group('/mesa', function (RouteCollectorProxy $group) 
-// {
-//     $group->get('[/]', \MesaController::class . ':TraerTodos');
-//     $group->get('/traer', \MesaController::class . ':TraerUno')->add(new ValidarDatos(array("id")));
-//     $group->post('/crear', \MesaController::class . ':CargarUno')->add(new ValidarDatos(array("estado", "idMozoAsignado")));
-// });
-// $app->group('/pedido', function (RouteCollectorProxy $group) 
-// {
-//     $group->get('[/]', \PedidoController::class . ':TraerTodos');
-//     $group->get('/traer', \PedidoController::class . ':TraerUno')->add(new ValidarDatos(array("id")));
-//     $group->post('/crear', \PedidoController::class . ':CargarUno')->add(new ValidarDatos(array("nombreCliente", "codigoMesa")));
-// });
-// $app->group('/productoPedido', function (RouteCollectorProxy $group) 
-// {
-//     $group->get('[/]', \ProductoPedidoController::class . ':TraerTodos');
-//     $group->get('/traer', \ProductoPedidoController::class . ':TraerUno');
-//     $group->post('/crear', \ProductoPedidoController::class . ':CargarUno')->add(new ValidarDatos(array("idProducto", "idPedido", "idUsuario")));
-// });
-
-//SPRINT 2
-//SPRINT 3
-//SPRINT 4
-
-
-// RUTAS FUNCIONALIDADES
 $app->post("/login", \Logger::class . ':Loguear');
 
-$app->group('/pedido', function (RouteCollectorProxy $group) 
-{
-    // $group->get('[/]', \PedidoController::class . ':TraerTodos');
-    // $group->get('/traer', \PedidoController::class . ':TraerUno')->add(new ValidarDatos(array("id")));
-    // PUNTO 1
-    $group->post('/crear', \PedidoController::class . ':CargarUno')->add(new ValidarDatos(array("nombreCliente", "codigoMesa")))->add(\Logger::class.':ValidarPermisosMozo');
-    // PUNTO 2
-    $group->post('/tomarFoto', \PedidoController::class . ':AsociarFotoConPedido')->add(new ValidarDatos(array("codigoPedido")));
-    // PUNTO 3
-    $group->put('/cambiarEstado', \PedidoController::class . ':CambiarEstadoPedido')->add(new ValidarDatos(array("id")));
-    // PUNTO 4
-    $group->post('/traerPedidoPorCodigoMesaYPedido', \PedidoController::class . ':TraerTiempoEstimadoPorCodigoMesayPedido')->add(new ValidarDatos(array("codigoPedido", "codigoMesa")));
-    // PUNTO 5
-    $group->get('/socio', \PedidoController::class . ':TraerTodos')->add(\Logger::class.':ValidarPermisosSocio');
-});
 $app->group('/productoPedido', function (RouteCollectorProxy $group) 
-{
-    // $group->get('[/]', \ProductoPedidoController::class . ':TraerTodos');
-    // $group->get('/traer', \ProductoPedidoController::class . ':TraerUno');
+{    
     // PUNTO 1
-    $group->post('/crear', \ProductoPedidoController::class . ':CargarUno')->add(new ValidarDatos(array("idProducto", "idPedido", "idUsuario")))->add(\Logger::class.':ValidarPermisosMozo');
+    $group->post('/crear', \ProductoPedidoController::class . ':CargarUno')
+    ->add(new ValidarDatos(array("idProducto", "idPedido", "idUsuarioEncargado")))
+    ->add(new Logger(array("Mozo")));
     // PUNTO 3
-    $group->get('/traerPorPuesto', \ProductoPedidoController::class . ':TraerProductosPedidosPendientesPorPuesto')->add(new ValidarDatos(array("puesto")));
+    $group->get('/traerProductoPedidosPendientesPorPuesto', \ProductoPedidoController::class . ':TraerProductosPedidosPendientesPorIdUsuario')
+    ->add(new Logger(array("Cocinero", "Cervecero", "Bartender")));
+    $group->put('/modificarEstadoYTiempoPreparacion', \ProductoPedidoController::class . ':ModificarEstadoYTiempoPreparacion')
+    ->add(new ValidarDatos(array("estado", "tiempoPreparacion")))
+    ->add(new ValidarDatos(array("idProductoPedido")))
+    ->add(new Logger(array("Cocinero", "Cervecero", "Bartender")));
     // PUNTO 6
-    $group->put('/modificarEstado', \ProductoPedidoController::class . ':ModificarEstado')->add(new ValidarDatos(array("estado")))->add(\Logger::class.':ValidarPermisosPuestoEmpleados');
+    $group->get('/traerProductoPedidosEnPreparacionPorPuesto', \ProductoPedidoController::class . ':TraerProductosPedidosEnPreparacionPorIdUsuario')
+    ->add(new Logger(array("Cocinero", "Cervecero", "Bartender")));
+    $group->put('/modificarEstado', \ProductoPedidoController::class . ':ModificarEstado')
+    ->add(new ValidarDatos(array("estado")))
+    ->add(new ValidarDatos(array("idProductoPedido")))
+    ->add(new Logger(array("Cocinero", "Cervecero", "Bartender")));
+    
 
+});
+$app->group('/pedido', function (RouteCollectorProxy $group) 
+{    
+    // PUNTO 1
+    $group->post('/crear', \PedidoController::class . ':CargarUno')->add(new ValidarDatos(array("nombreCliente", "codigoMesa")))
+    ->add(new Logger(array("Mozo")));
+    // PUNTO 2
+    $group->post('/tomarFoto', \PedidoController::class . ':AsociarFotoConPedido')->add(new ValidarDatos(array("codigoPedido")))
+    ->add(new Logger(array("Mozo")));
+    // PUNTO 4
+    $group->post('/traerPedidoPorCodigoMesaYPedido', \PedidoController::class . ':TraerTiempoEstimadoPorCodigoMesayPedido')
+    ->add(new ValidarDatos(array("codigoPedido", "codigoMesa")));
+    // PUNTO 5
+    $group->get('/socio', \PedidoController::class . ':TraerTodos')
+    ->add(new Logger(array("Socio")));
+    // PUNTO 14
+    $group->get('/traerPedidosNoEntregadosEnElTiempoEstipulado', \PedidoController::class . ':TraerPedidosNoEntregadosEnElTiempoEstipulado')
+    ->add(new Logger(array("Socio"))); 
 });
 $app->group('/mesa', function (RouteCollectorProxy $group)
 {
     // PUNTO 7
-    $group->put('/modificarEstadoMesa', \MesaController::class . ':ModificarEstadoMesa')->add(\Logger::class.':ValidarPermisosMozo');
+    $group->put('/modificarEstadoMesa', \MesaController::class . ':ModificarEstadoMesa')
+    ->add(new ValidarDatos(array("estadoPedido", "estadoActualizado")))
+    ->add(new ValidarDatos(array("idPedido")))
+    ->add(new Logger(array("Mozo")));
     // PUNTO 8
-    $group->get('/socio', \MesaController::class . ':TraerTodos')->add(\Logger::class.':ValidarPermisosSocio');
+    $group->get('/socio', \MesaController::class . ':TraerTodos')
+    ->add(new Logger(array("Socio")));
     // PUNTO 9
-    $group->post('/cobrarMesa', \MesaController::class . ':CobrarMesa');
+    $group->post('/cobrarMesa', \MesaController::class . ':CobrarMesa')
+    ->add(new ValidarDatos(array("codigoMesa")))
+    ->add(new ValidarDatos(array("idPedido")))
+    ->add(new Logger(array("Mozo")));
     // PUNTO 10
-    $group->delete('/cerrarMesa', \MesaController::class . ':BorrarUno')->add(\Logger::class.':ValidarPermisosSocio');
+    $group->delete('/cerrarMesa', \MesaController::class . ':BorrarUno')
+    ->add(new ValidarDatos(array("codigoMesa")))
+    ->add(new Logger(array("Socio")));
     // PUNTO 13
-    $group->get('/traerMesaMasUsada', \MesaController::class . ':TraerMesaMasUsada')->add(\Logger::class.':ValidarPermisosSocio');
+    $group->get('/traerMesaMasUsada', \MesaController::class . ':TraerMesaMasUsada')
+    ->add(new Logger(array("Socio")));
 
 });
+$app->group('/producto', function (RouteCollectorProxy $group)
+{
+    // PUNTO 15
+    $group->get('/traerProductosNoEntregadosEnElTiempoEstipulado', \ProductoController::class . ':TraerProductosNoEntregadosEnElTiempoEstipulado')
+    ->add(new Logger(array("Socio"))); 
+});
+
 $app->group('/encuesta', function (RouteCollectorProxy $group)
 {
     // PUNTO 11
-    $group->post('/completarEncuesta', \EncuestaController::class . ':CargarUno');
+    $group->post('/completarEncuesta', \EncuestaController::class . ':CargarUno')    
+    ->add(new ValidarDatos(array("codigoMesa", "codigoPedido", "puntosMesa", "puntosRestaurante", "puntosMozo", "puntosCocinero", "comentario")));
     // PUNTO 12
-    $group->get('/traerMejoresComentarios', \EncuestaController::class . ':TraerEncuestaMejoresComentarios');
+    $group->get('/traerMejoresComentarios', \EncuestaController::class . ':TraerEncuestaMejoresComentarios')
+    ->add(new Logger(array("Socio")));    
 });
-
-$app->group('/usuarios', function (RouteCollectorProxy $group)
-{
-    $group->get('/descargarUsuarios', \UsuarioController::class . ':DescargarUsuariosCsv');
-    $group->post('/cargarUsuarios', \UsuarioController::class . ':CargarUsuariosCsv');
-});
-
 // PUNTO 16
 $app->post('/PDF', function (Request $request, Response $response, array $args) 
 {
@@ -175,6 +163,6 @@ $app->post('/PDF', function (Request $request, Response $response, array $args)
     }
 
     return $response->withStatus(400);
-})->add(new ValidarDatos(array("logo")))->add(\Logger::class.':ValidarPermisosSocio');
+})->add(new Logger(array("Socio")));
 
 $app->run();

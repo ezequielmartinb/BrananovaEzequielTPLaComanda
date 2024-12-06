@@ -1,19 +1,50 @@
 <?php
     require_once './models/Usuario.php';
     require_once 'AutentificadorJWT.php';
+    use Psr\Http\Message\ServerRequestInterface as Request;
+    use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+    use Slim\Psr7\Response;
 
     class Logger
     {
-        public static function LogOperacion($request, $response, $next)
-        {
-            $retorno = $next($request, $response);
-            return $retorno;
-        }
+        private $camposAValidar;
 
-        public static function LimpiarCookieUsuario($request, $handler)
+        public function __construct($camposAValidar)
         {
-            setcookie("jwt", '', time() - 3600);
-            return $handler->handle($request);
+            $this->camposAValidar = $camposAValidar;
+        }
+        public function __invoke(Request $request, RequestHandler $handler): Response
+        {
+            $header = $request->getHeaderLine('Authorization');
+            $token = trim(explode("Bearer", $header)[1]);
+    
+            try 
+            {
+                AutentificadorJWT::VerificarToken($token);
+                $data = AutentificadorJWT::ObtenerData($token);
+                if($request instanceof \Psr\Http\Message\ServerRequestInterface)
+                {
+                    if(in_array($data->puesto, $this->camposAValidar))
+                    {
+                        $response = $handler->handle($request);
+                    }
+                    else
+                    {
+                        $response = new Response();
+                        $payload = json_encode(array('error' => "El usuario $data->apellido, $data->nombre cuyo puesto es $data->puesto no tiene permisos para esta tarea."));
+                        $response->getBody()->write($payload);
+                        $response = $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+                    }
+                }     
+            } 
+            catch (Exception $e) 
+            {
+                $response = new Response();
+                $payload = json_encode(array('error' => 'Token ingresado INVALIDO'));
+                $response->getBody()->write($payload);
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
+            }
+            return $response->withHeader('Content-Type', 'application/json');                          
         }
 
         public static function Loguear($request, $response, $args)
@@ -22,7 +53,7 @@
             $mail = $parametros['mail'];
             $clave = $parametros['clave'];
             $usuario = Usuario::obtenerUsuarioPorMailYClave($mail, $clave);
-            if($usuario != null)
+            if($usuario != null && $usuario->estado != 'Inactivo')
             {              
                 $datos = array('id' => $usuario->id, 'nombre' => $usuario->nombre, 'apellido' => $usuario->apellido, 'puesto' => $usuario->puesto, 'estado' => $usuario->estado);
                 $token = AutentificadorJWT::CrearToken($datos);
@@ -36,87 +67,7 @@
             $response->getBody()->write($payload);
             return $response->withHeader('Content-Type', 'application/json');
         }
-
-        public static function CerrarSesion($request, $response, $args)
-        {
-            $payload = json_encode(array('mensaje'=>'Sesion Cerrada'));
-            $response->getBody()->write($payload);
-            return $response->withHeader('Content-Type', 'application/json');
-        }
-
-        public static function ValidarSesion($request, $handler)
-        {
-            $cookie = $request->getCookieParams();
-            if(isset($cookie['JWT']))
-            {
-                $token = $cookie['JWT'];
-                $datos = AutentificadorJWT::ObtenerData($token);
-                if($datos->estado == 'Activo')
-                {
-                    return $handler->handle($request);
-                }
-                else
-                {
-                    throw new Exception('Error. No es un usuario ACTIVO');
-                }
-            }
-            throw new Exception('Debe haber iniciado sesion');
-        }
-        public static function ValidarPermisosPuestoEmpleados($request, $handler, $puesto = false)
-        {
-            $cookies = $request->getCookieParams();
-            $token = $cookies['JWT'];
-            try
-            {
-                AutentificadorJWT::VerificarToken($token);
-                $datos = AutentificadorJWT::ObtenerData($token);
-                if(!$puesto && ($datos->puesto == 'Bartender' || $datos->puesto == 'Cervecero' || $datos->puesto == 'Cocinero'))
-                {
-                    return $handler->handle($request);
-                }
-            }
-            catch(Exception $e)
-            {
-                throw new Exception('Acceso denegado');
-            }
-        }
-        public static function ValidarPermisosMozo($request, $handler)
-        {
-            $cookies = $request->getCookieParams();
-            $token = $cookies['JWT'];
-            try
-            {
-                AutentificadorJWT::VerificarToken($token);
-                $datos = AutentificadorJWT::ObtenerData($token);
-                if($datos->puesto == 'Mozo') 
-                {
-                    return $handler->handle($request);
-                }
-            }
-            catch(Exception $e)
-            {
-                throw new Exception('Acceso denegado. No es un Mozo');
-            }
-        }
-        public static function ValidarPermisosSocio($request, $handler, $puesto = false)
-        {
-            $cookies = $request->getCookieParams();
-            $token = $cookies['JWT'];
-            try
-            {
-                AutentificadorJWT::VerificarToken($token);
-                $datos = AutentificadorJWT::ObtenerData($token);
-                if(!$puesto && $datos->puesto == 'Socio') 
-                {
-                    echo "El socio " . $datos->apellido . ", " . $datos->nombre . " realizó la accion: ";
-                    return $handler->handle($request);
-                }
-            }
-            catch(Exception $e)
-            {
-                throw new Exception('Acceso denegado. NO es un Socio');
-            }
-        }
-    }
+    }  
+        
 
 ?>

@@ -8,17 +8,17 @@ class EncuestaController extends Encuesta implements IApiUsable
   {      
     $parametros = $request->getParsedBody();    
       
-    $idMesa = $parametros['idMesa'];
-    $idPedido = $parametros['idPedido'];
+    $codigoMesa = $parametros['codigoMesa'];
+    $codigoPedido = $parametros['codigoPedido'];
     $puntosMesa = $parametros['puntosMesa'];
     $puntosRestaurante = $parametros['puntosRestaurante'];
     $puntosMozo = $parametros['puntosMozo'];   
     $puntosCocinero = $parametros['puntosCocinero'];   
-    $comentario = $parametros['comentario'];   
-      
+    $comentario = $parametros['comentario'];      
+    
     $encuesta = new Encuesta();
-    $encuesta->idMesa = $idMesa;
-    $encuesta->idPedido = $idPedido;
+    $encuesta->codigoMesa = $codigoMesa;
+    $encuesta->codigoPedido = $codigoPedido;
     $encuesta->puntosMesa = $puntosMesa;
     $encuesta->puntosRestaurante =  $puntosRestaurante;
     $encuesta->puntosMozo =  $puntosMozo;
@@ -85,8 +85,8 @@ class EncuestaController extends Encuesta implements IApiUsable
     $encuesta = Encuesta::obtenerEncuestaPorId($parametros['id']);
     if($encuesta != null)
     {          
-      $encuesta->idMesa = $parametros['idMesa'];        
-      $encuesta->idPedido = $parametros['idPedido'];       
+      $encuesta->codigoMesa = $parametros['codigoMesa'];        
+      $encuesta->codigoPedido = $parametros['codigoPedido'];       
       $encuesta->puntosMesa = $parametros['puntosMesa'];       
       $encuesta->puntosRestaurante = $parametros['puntosRestaurante'];       
       $encuesta->puntosMozo = $parametros['puntosMozo'];       

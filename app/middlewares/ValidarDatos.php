@@ -194,9 +194,18 @@ class ValidarDatos
             $nombreClienteIngresado = $params["nombreCliente"]; 
             $codigoMesaIngresado = $params["codigoMesa"];             
             
-            if(is_string($nombreClienteIngresado) && is_string($codigoMesaIngresado) && Mesa::obtenerMesaPorCodigoMesa($codigoMesaIngresado) != null) 
+            if(is_string($nombreClienteIngresado) && is_string($codigoMesaIngresado)) 
             {
-                return $requestHandler->handle($request);
+                $mesa = Mesa::obtenerMesaPorCodigoMesa($codigoMesaIngresado);
+                if($mesa != null && $mesa->estado == 'disponible')
+                {
+                    return $requestHandler->handle($request);
+                }
+                else
+                {
+                    $response->getBody()->write(json_encode(array("error" => "La mesa $mesa->codigoMesa no está disponible")));
+                    return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+                }
             }
         }           
         else
@@ -220,7 +229,15 @@ class ValidarDatos
             && Usuario::obtenerUsuarioPorId($idUsuarioEncargadoIngresado) != null && Producto::obtenerProductoPorId($idProductoIngresado) != null 
             && Pedido::obtenerPedidoPorId($idPedidoIngresado) != null) 
             {                
-                return $requestHandler->handle($request);                
+                $pedido = Pedido::obtenerPedidoPorId($idPedidoIngresado);
+                if($pedido->estado == 'pendiente')
+                {
+                    return $requestHandler->handle($request);                
+                }
+                else
+                {
+                    $response->getBody()->write(json_encode(array("error" => "El pedido ingresado ya fue consumido o está siendolo")));
+                }
             }
             else
             {
@@ -352,7 +369,17 @@ class ValidarDatos
             if(is_string($estadoIngresado) && intval($tiempoPreparacionIngresado) && intval($tiempoPreparacionIngresado) > 0
             && ($estadoIngresado == 'pendiente' || $estadoIngresado == 'en preparacion' || $estadoIngresado == 'listo para servir'))
             {
-                return $requestHandler->handle($request);     
+                $idProductoPedidoIngresado = $params["idProductoPedido"];
+                $productoPedidoIngresado = ProductoPedido::obtenerProductoPedidoPorId($idProductoPedidoIngresado);
+                if($productoPedidoIngresado->estado != 'entregado')
+                {
+                    return $requestHandler->handle($request);     
+                }
+                else
+                    {
+                        $response->getBody()->write(json_encode(array("error" => "Id Producto Pedido ingresado incorrecto")));
+                        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+                    }
             }
             else
             {

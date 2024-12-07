@@ -57,7 +57,6 @@
             {              
                 $datos = array('id' => $usuario->id, 'nombre' => $usuario->nombre, 'apellido' => $usuario->apellido, 'puesto' => $usuario->puesto, 'estado' => $usuario->estado);
                 $token = AutentificadorJWT::CrearToken($datos);
-                setcookie('JWT', $token, time()+6000, '/', 'localhost', false, true);
                 $payload = json_encode(array('jwt'=> $token));               
             }
             else

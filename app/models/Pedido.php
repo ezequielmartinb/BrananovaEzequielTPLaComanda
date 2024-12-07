@@ -122,14 +122,11 @@ class Pedido
         $consulta->bindValue(':estado', $pedido->estado, PDO::PARAM_STR);
         $consulta->execute();
     }
-    public static function modificarPedidoEstadoYHoraFinal($pedido)
+    public static function modificarPedidoEstado($pedido)
     {
         $objAccesoDato = AccesoDatos::obtenerInstancia();
         $consulta = $objAccesoDato->prepararConsulta("UPDATE pedidos SET estado = :estado, horaFinal = :horaFinal WHERE id = :id");
-        $consulta->bindValue(':id', $pedido->id, PDO::PARAM_INT);
-        date_default_timezone_set('America/Argentina/Buenos_Aires');
-        $horaFinal = new DateTime();
-        $consulta->bindValue(':horaFinal', $horaFinal->format('Y-m-d H:i:s'), PDO::PARAM_STR);
+        $consulta->bindValue(':id', $pedido->id, PDO::PARAM_INT);        
         $consulta->bindValue(':estado', $pedido->estado, PDO::PARAM_STR);
         $consulta->execute();
     }
@@ -144,14 +141,7 @@ class Pedido
         $consulta->bindValue(':estado', $pedido->estado, PDO::PARAM_STR);
         $consulta->execute();
     }
-    public static function modificarPedidoEstado($estado, $id)
-    {
-        $objAccesoDato = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDato->prepararConsulta("UPDATE pedidos SET estado = :estado WHERE id = :id");
-        $consulta->bindValue(':id', $id, PDO::PARAM_INT);        
-        $consulta->bindValue(':estado', $estado, PDO::PARAM_STR);
-        $consulta->execute();
-    }
+    
     public static function obtenerPedidoPorPuesto($puesto, $estado)
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();

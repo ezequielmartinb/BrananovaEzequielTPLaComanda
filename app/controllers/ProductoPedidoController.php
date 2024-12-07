@@ -110,8 +110,8 @@ class ProductoPedidoController extends ProductoPedido implements IApiUsable
     public function ModificarEstadoYTiempoPreparacion($request, $response, $args)
     {
         $parametros = $request->getParsedBody(); 
-        $cookies = $request->getCookieParams();
-        $token = $cookies['JWT'];
+        $header = $request->getHeaderLine('Authorization');
+        $token = trim(explode("Bearer", $header)[1]);
         AutentificadorJWT::VerificarToken($token);
         $datos = AutentificadorJWT::ObtenerData($token);       
         $estado = $parametros['estado'];
@@ -131,7 +131,8 @@ class ProductoPedidoController extends ProductoPedido implements IApiUsable
                 {
                     $intervalo = new DateInterval('PT'.$tiempoPreparacion.'M');
                     $horaInicio = new DateTime($pedido->horaInicio);
-                    $pedido->horaEstimadaFinal = $horaInicio->add($intervalo);
+                    $horaEstimadaFinal = $horaInicio->add($intervalo);
+                    $pedido->horaEstimadaFinal = $horaEstimadaFinal->format('Y-m-d H:i:s');
                     Pedido::modificarPedido($pedido);
                 }
                 else
@@ -170,8 +171,8 @@ class ProductoPedidoController extends ProductoPedido implements IApiUsable
     public function ModificarEstado($request, $response, $args)
     {
         $parametros = $request->getParsedBody(); 
-        $cookies = $request->getCookieParams();
-        $token = $cookies['JWT'];
+        $header = $request->getHeaderLine('Authorization');
+        $token = trim(explode("Bearer", $header)[1]);
         AutentificadorJWT::VerificarToken($token);
         $datos = AutentificadorJWT::ObtenerData($token);       
         $estado = $parametros['estado'];
@@ -198,7 +199,7 @@ class ProductoPedidoController extends ProductoPedido implements IApiUsable
                 if($todosListos) 
                 { 
                     $pedido->estado = 'listo para servir';                     
-                    Pedido::modificarPedidoEstadoYHoraFinal($pedido); 
+                    Pedido::modificarPedidoEstado($pedido); 
                 }
                 $payload = json_encode(array("mensaje" => "El estado del Producto Pedido fue modificado con exito"));
             }            

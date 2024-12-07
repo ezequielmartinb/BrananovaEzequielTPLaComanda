@@ -17,11 +17,11 @@
         {
             $header = $request->getHeaderLine('Authorization');
             $token = trim(explode("Bearer", $header)[1]);
-    
             try 
             {
                 AutentificadorJWT::VerificarToken($token);
                 $data = AutentificadorJWT::ObtenerData($token);
+
                 if($request instanceof \Psr\Http\Message\ServerRequestInterface)
                 {
                     if(in_array($data->puesto, $this->camposAValidar))

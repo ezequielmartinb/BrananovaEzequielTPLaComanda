@@ -109,11 +109,14 @@ class MesaController extends Mesa implements IApiUsable
       {
         if($productoPedido->estado == "listo para servir" && $productoPedido->idPedido == $mesa->idPedido)
         {
-          $productoPedido->estado = "entregado";
+          $productoPedido->estado = "entregado";          
           ProductoPedido::modificarProductoPedido($productoPedido);
         }
       }
       $pedido->estado = "entregado";
+      date_default_timezone_set('America/Argentina/Buenos_Aires');
+      $horaFinal = new DateTime();
+      $pedido->horaFinal = $horaFinal->format('Y-m-d H:i:s');
       Pedido::modificarPedido($pedido);
       $mesa->estado = $estadoActualizado;
       $mesa->modificarMesa();

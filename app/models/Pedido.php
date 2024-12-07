@@ -77,7 +77,7 @@ class Pedido
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
         $consulta = $objAccesoDatos->prepararConsulta("SELECT id, codigoPedido, codigoMesa, horaEstimadaFinal, nombreCliente, fotoCliente, estado, horaInicio, horaFinal FROM pedidos WHERE estado = :estado");
-        $consulta->bindValue(':estado', $estado, PDO::PARAM_INT);
+        $consulta->bindValue(':estado', $estado, PDO::PARAM_STR);
         $consulta->execute();
         return $consulta->fetchObject('Pedido');
     }

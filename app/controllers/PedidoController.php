@@ -40,7 +40,7 @@ class PedidoController extends Pedido implements IApiUsable
 
     public function TraerTodos($request, $response, $args)
     {
-        $lista = Pedido::obtenerTodos();
+        $lista = Pedido::obtenerPedidoPorEstado("pendiente");
         $payload = json_encode(array("listaPedidos" => $lista));
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');

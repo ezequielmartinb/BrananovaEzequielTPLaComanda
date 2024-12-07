@@ -505,12 +505,12 @@ class ValidarDatos
         !isset($puntosMozoIngresado) || !intval($puntosMozoIngresado) ||
         !isset($puntosCocineroIngresado) || !intval($puntosCocineroIngresado) ||
         !isset($comentarioIngresado) || !is_string($comentarioIngresado) || strlen($comentarioIngresado) > 66 ||
-        Pedido::obtenerPedidoPorCodigoPedido($codigoPedidoIngresado) == null || Encuesta::obtenerEncuestaPorCodigoPedido($codigoPedidoIngresado) == null ||
-        Mesa::obtenerMesaPorCodigoMesa($codigoMesaIngresado) == null || Encuesta::obtenerEncuestaPorCodigoMesa($codigoMesaIngresado) == null) 
+        Pedido::obtenerPedidoPorCodigoPedido($codigoPedidoIngresado) == null || Encuesta::obtenerEncuestaPorCodigoPedido($codigoPedidoIngresado) != null ||
+        Mesa::obtenerMesaPorCodigoMesa($codigoMesaIngresado) == null || Encuesta::obtenerEncuestaPorCodigoMesa($codigoMesaIngresado) != null) 
     {
         $payload = json_encode(array("error" => "Los datos ingresados no son válidos. Asegúrese de que el código de mesa solo contenga números y letras, todos los puntos sean enteros, y el comentario no exceda los 66 caracteres."));
         $response->getBody()->write($payload); 
-        return $response->withHeader('Content-Type', 'application/json'); 
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(400); 
     }
 
     return $requestHandler->handle($request);

@@ -15,7 +15,13 @@ class PedidoController extends Pedido implements IApiUsable
         $pedido = new Pedido();
         $pedido->nombreCliente = $nombreCliente;
         $pedido->codigoMesa = $codigoMesa;
+        $pedido->codigoPedido = Pedido::obtenerCodigoPedido();
         $pedido->crearPedido();
+        $pedidoCreado = Pedido::obtenerPedidoPorCodigoPedido($pedido->codigoPedido);
+        $mesa = Mesa::obtenerMesaPorCodigoMesa($codigoMesa);
+        $mesa->idPedido = $pedidoCreado->id;
+        $mesa->estado = 'esperando';
+        $mesa->modificarMesa();
         $payload = json_encode(array("mensaje" => "Pedido creado con exito"));        
         
         $response->getBody()->write($payload);

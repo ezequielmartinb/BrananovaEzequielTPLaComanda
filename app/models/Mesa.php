@@ -41,6 +41,15 @@ class Mesa
 
         return $consulta->fetchObject('Mesa');
     }
+    public static function obtenerMesaPorIdPedido($idPedido)
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT mesas.id, mesas.idPedido, mesas.codigoMesa, mesas.idMozoAsignado, mesas.estado, mesas.recaudacion  FROM Mesas, Pedidos WHERE pedidos.id = :idPedido AND pedidos.id = mesas.idPedido");
+        $consulta->bindValue(':idPedido', $idPedido, PDO::PARAM_INT);
+        $consulta->execute();
+
+        return $consulta->fetchObject('Mesa');
+    }
     public static function obtenerMesaPorIdMozoAsignado($idMozoAsignado)
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();

@@ -18,9 +18,8 @@ class Pedido
         $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO pedidos (codigoPedido, codigoMesa, horaEstimadaFinal, nombreCliente, estado, horaInicio, horaFinal) 
         VALUES (:codigoPedido, :codigoMesa, :horaEstimadaFinal, :nombreCliente, :estado, :horaInicio, :horaFinal)");
         date_default_timezone_set('America/Argentina/Buenos_Aires');
-        $horaInicio = new DateTime();
-        $codigoPedido = Pedido::obtenerCodigoPedido();
-        $consulta->bindValue(':codigoPedido', $codigoPedido, PDO::PARAM_STR);
+        $horaInicio = new DateTime();        
+        $consulta->bindValue(':codigoPedido', $this->codigoPedido, PDO::PARAM_STR);
         $consulta->bindValue(':codigoMesa', $this->codigoMesa, PDO::PARAM_STR);
         $consulta->bindValue(':nombreCliente', $this->nombreCliente, PDO::PARAM_STR);
         $consulta->bindValue(':estado', 'pendiente', PDO::PARAM_STR);                   
@@ -114,10 +113,11 @@ class Pedido
     public static function modificarPedido($pedido)
     {
         $objAccesoDato = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDato->prepararConsulta("UPDATE pedidos SET codigoPedido = :codigoPedido, nombreCliente = :nombreCliente, estado = :estado, horaEstimadaFinal = :horaEstimadaFinal WHERE id = :id");
+        $consulta = $objAccesoDato->prepararConsulta("UPDATE pedidos SET codigoPedido = :codigoPedido, nombreCliente = :nombreCliente, estado = :estado, horaEstimadaFinal = :horaEstimadaFinal, horaFinal = :horaFinal WHERE id = :id");
         $consulta->bindValue(':id', $pedido->id, PDO::PARAM_INT);
         $consulta->bindValue(':codigoPedido', $pedido->codigoPedido, PDO::PARAM_STR);
         $consulta->bindValue(':horaEstimadaFinal', $pedido->horaEstimadaFinal, PDO::PARAM_STR);
+        $consulta->bindValue(':horaFinal', $pedido->horaFinal, PDO::PARAM_STR);
         $consulta->bindValue(':nombreCliente', $pedido->nombreCliente, PDO::PARAM_STR);
         $consulta->bindValue(':estado', $pedido->estado, PDO::PARAM_STR);
         $consulta->execute();
@@ -125,7 +125,7 @@ class Pedido
     public static function modificarPedidoEstado($pedido)
     {
         $objAccesoDato = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDato->prepararConsulta("UPDATE pedidos SET estado = :estado, horaFinal = :horaFinal WHERE id = :id");
+        $consulta = $objAccesoDato->prepararConsulta("UPDATE pedidos SET estado = :estado WHERE id = :id");
         $consulta->bindValue(':id', $pedido->id, PDO::PARAM_INT);        
         $consulta->bindValue(':estado', $pedido->estado, PDO::PARAM_STR);
         $consulta->execute();

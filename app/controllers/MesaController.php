@@ -99,7 +99,8 @@ class MesaController extends Mesa implements IApiUsable
     $estadoActualizado = $parametros['estadoActualizado'];
     $idPedido = $parametros['idPedido'];
     
-    $mesa = Mesa::obtenerPorEstadoPedido($estadoPedido);
+    $mesa = Mesa::obtenerMesaPorIdPedido($idPedido);
+    var_dump($mesa);
     if($mesa != null)
     {
       $pedido = Pedido::obtenerPedidoPorId($idPedido);
@@ -153,7 +154,7 @@ class MesaController extends Mesa implements IApiUsable
       $mesa->idPedido = null;
       $mesa->modificarMesa();
       $pedido->estado = "cobrado";      
-      Pedido::modificarPedidoEstado($pedido->estado, $pedido->id);
+      Pedido::modificarPedidoEstado($pedido);
       $payload = json_encode(array("mensaje" => "La mesa $codigoMesa fue cobrada con exito. La suma fue de $ $acumuladorPrecioMesa"));
     }
     else

@@ -174,7 +174,7 @@ class ProductoPedidoController extends ProductoPedido implements IApiUsable
         $header = $request->getHeaderLine('Authorization');
         $token = trim(explode("Bearer", $header)[1]);
         AutentificadorJWT::VerificarToken($token);
-        $datos = AutentificadorJWT::ObtenerData($token);       
+        $datos = AutentificadorJWT::ObtenerData($token);      
         $estado = $parametros['estado'];
         $idProductoPedido = $parametros['idProductoPedido'];        
         $productoPedido = ProductoPedido::obtenerProductoPedidoPorId($idProductoPedido);

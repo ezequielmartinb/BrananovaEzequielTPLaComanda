@@ -64,10 +64,12 @@ $app->group('/productoPedido', function (RouteCollectorProxy $group)
 $app->group('/pedido', function (RouteCollectorProxy $group) 
 {    
     // PUNTO 1
-    $group->post('/crear', \PedidoController::class . ':CargarUno')->add(new ValidarDatos(array("nombreCliente", "codigoMesa")))
+    $group->post('/crear', \PedidoController::class . ':CargarUno')
+    ->add(new ValidarDatos(array("nombreCliente", "codigoMesa")))
     ->add(new Logger(array("Mozo")));
     // PUNTO 2
-    $group->post('/tomarFoto', \PedidoController::class . ':AsociarFotoConPedido')->add(new ValidarDatos(array("codigoPedido")))
+    $group->post('/tomarFoto', \PedidoController::class . ':AsociarFotoConPedido')
+    ->add(new ValidarDatos(array("codigoPedido")))
     ->add(new Logger(array("Mozo")));
     // PUNTO 4
     $group->post('/traerPedidoPorCodigoMesaYPedido', \PedidoController::class . ':TraerTiempoEstimadoPorCodigoMesayPedido')

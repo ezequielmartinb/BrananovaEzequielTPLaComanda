@@ -100,7 +100,6 @@ class MesaController extends Mesa implements IApiUsable
     $idPedido = $parametros['idPedido'];
     
     $mesa = Mesa::obtenerMesaPorIdPedido($idPedido);
-    var_dump($mesa);
     if($mesa != null)
     {
       $pedido = Pedido::obtenerPedidoPorId($idPedido);

@@ -89,7 +89,7 @@ class ValidarDatos
                 return $this->ValidarModificarMesa($request, $requestHandler, $response);
                 break;  
             case array("codigoMesa"):
-                return $this->ValidarCodigoMesaMesa($request, $requestHandler, $response);
+                return $this->ValidarCodigoMesa($request, $requestHandler, $response);
                 break;    
             case array("codigoMesa", "codigoPedido","puntosMesa", "puntosRestaurante", "puntosMozo", "puntosCocinero", "comentario"):
                 return $this->ValidarDatosEncuesta($request, $requestHandler, $response);
@@ -115,11 +115,16 @@ class ValidarDatos
             && is_string($estadoIngresado) && ($estadoIngresado == "Activo" || $estadoIngresado == "Inactivo")) 
             {
                 return $requestHandler->handle($request);
-            }            
+            }
+            else
+            {
+                $response->getBody()->write(json_encode(array("error" => "Datos incorrectos")));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(406);
+            }                        
         }           
         else
         {
-            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            $response->getBody()->write(json_encode(array("error" => "Faltan parametros")));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
         
@@ -143,12 +148,12 @@ class ValidarDatos
             else
             {
                 $response->getBody()->write(json_encode(array("error" => "Datos incorrectos")));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(406);
             }
         }           
         else
         {
-            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            $response->getBody()->write(json_encode(array("error" => "Faltan parametros")));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
         
@@ -173,13 +178,18 @@ class ValidarDatos
                 else
                 {
                     $response->getBody()->write(json_encode(array("error" => "Mozo asignado INEXISTENTE")));
-                    return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+                    return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
                 }
+            }
+            else
+            {
+                $response->getBody()->write(json_encode(array("error" => "Datos incorrectos")));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(406);
             }
         }           
         else
         {
-            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            $response->getBody()->write(json_encode(array("error" => "Faltan parametros")));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
         
@@ -194,7 +204,7 @@ class ValidarDatos
             $nombreClienteIngresado = $params["nombreCliente"]; 
             $codigoMesaIngresado = $params["codigoMesa"];             
             
-            if(is_string($nombreClienteIngresado) && is_string($codigoMesaIngresado)) 
+            if(is_string($nombreClienteIngresado) && is_string($codigoMesaIngresado) && Mesa::obtenerMesaPorCodigoMesa($codigoMesaIngresado) != null) 
             {
                 $mesa = Mesa::obtenerMesaPorCodigoMesa($codigoMesaIngresado);
                 if($mesa != null && $mesa->estado == 'disponible')
@@ -204,13 +214,18 @@ class ValidarDatos
                 else
                 {
                     $response->getBody()->write(json_encode(array("error" => "La mesa $mesa->codigoMesa no está disponible")));
-                    return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+                    return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
                 }
+            }
+            else
+            {
+                $response->getBody()->write(json_encode(array("error" => "Datos incorrectos")));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(406);
             }
         }           
         else
         {
-            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            $response->getBody()->write(json_encode(array("error" => "Faltan parametros")));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
         
@@ -225,7 +240,7 @@ class ValidarDatos
             $idProductoIngresado = $params["idProducto"];             
             $idUsuarioEncargadoIngresado = $params["idUsuarioEncargado"];             
             $idPedidoIngresado = $params["idPedido"];             
-            if(intval($idPedidoIngresado) && intval($idProductoIngresado) && intval($idUsuarioEncargadoIngresado)
+            if(intval($idPedidoIngresado) && intval($idProductoIngresado) && intval($idUsuarioEncargadoIngresado) 
             && Usuario::obtenerUsuarioPorId($idUsuarioEncargadoIngresado) != null && Producto::obtenerProductoPorId($idProductoIngresado) != null 
             && Pedido::obtenerPedidoPorId($idPedidoIngresado) != null) 
             {                
@@ -237,42 +252,23 @@ class ValidarDatos
                 else
                 {
                     $response->getBody()->write(json_encode(array("error" => "El pedido ingresado ya fue consumido o está siendolo")));
+                    return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
                 }
             }
             else
             {
                 $response->getBody()->write(json_encode(array("error" => "Datos incorrectos")));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(406);
             }
         }           
         else
         {
-            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            $response->getBody()->write(json_encode(array("error" => "Faltan parametros")));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
         
         return $response;   
-    }    
-    public function ValidarDatosModificarMesa(Request $request, RequestHandler $requestHandler, $response)
-    {
-        $params = $request->getParsedBody();        
-        
-        if(isset($params["idPedido"]) && isset($params["codigoMesa"]))
-        {            
-            $idPedidoIngresado = $params["idPedido"]; 
-            $codigoMesaIngresado = $params["codigoMesa"]; 
-            if(intval($idPedidoIngresado) && is_string($codigoMesaIngresado))
-            {
-                return $requestHandler->handle($request);
-            }
-        }           
-        else
-        {
-            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
-        }
-        
-        return $response;   
-    }
+    }   
     public function ValidarDatosCodigoPedidoYFoto(Request $request, RequestHandler $requestHandler, $response)
     {
         $params = $request->getParsedBody(); 
@@ -287,18 +283,27 @@ class ValidarDatos
             if(($extensionDeLaFoto == 'png' || $extensionDeLaFoto == 'jpg' || $extensionDeLaFoto == 'jpeg') 
             & is_string($codigoPedidoIngresado) && Pedido::obtenerPedidoPorCodigoPedido($codigoPedidoIngresado) != null)
             {
-                return $requestHandler->handle($request);     
+                $pedido = Pedido::obtenerPedidoPorCodigoPedido($codigoPedidoIngresado);
+                if($pedido->estado == 'pendiente')
+                {
+                    return $requestHandler->handle($request);                
+                }
+                else
+                {
+                    $response->getBody()->write(json_encode(array("error" => "El pedido ingresado ya fue consumido o está siendolo")));
+                    return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
+                }     
             }
             else
             {
-                $response->getBody()->write(json_encode(array("error" => "Datos incorrecto")));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+                $response->getBody()->write(json_encode(array("error" => "Datos incorrectos")));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(406);
             }
             
         }           
         else
         {
-            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            $response->getBody()->write(json_encode(array("error" => "Faltan parametros")));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
         
@@ -319,14 +324,14 @@ class ValidarDatos
             }
             else
             {
-                $response->getBody()->write(json_encode(array("error" => "Datos incorrecto")));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+                $response->getBody()->write(json_encode(array("error" => "Datos incorrectos")));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(406);
             }
             
         }           
         else
         {
-            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            $response->getBody()->write(json_encode(array("error" => "Faltan parametros")));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
         
@@ -346,13 +351,13 @@ class ValidarDatos
             else
             {
                 $response->getBody()->write(json_encode(array("error" => "Puesto ingresado incorrecto")));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(406);
             }
             
         }           
         else
         {
-            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            $response->getBody()->write(json_encode(array("error" => "Faltan parametros")));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
         
@@ -378,7 +383,7 @@ class ValidarDatos
                 else
                     {
                         $response->getBody()->write(json_encode(array("error" => "Id Producto Pedido ingresado incorrecto")));
-                        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+                        return $response->withHeader('Content-Type', 'application/json')->withStatus(406);
                     }
             }
             else
@@ -390,7 +395,7 @@ class ValidarDatos
         }           
         else
         {
-            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            $response->getBody()->write(json_encode(array("error" => "Faltan parametros")));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
         
@@ -410,12 +415,12 @@ class ValidarDatos
             else
             {
                 $response->getBody()->write(json_encode(array("error" => "Estado ingresado incorrecto")));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(406);
             }            
         }           
         else
         {
-            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            $response->getBody()->write(json_encode(array("error" => "Faltan parametros")));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
         
@@ -432,7 +437,7 @@ class ValidarDatos
             if(!(intval($idIngresado)))
             {
                 $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(406);
             }
         }
         else if($paramsPost != null)
@@ -441,7 +446,7 @@ class ValidarDatos
             if(!(intval($idIngresado)))
             {
                 $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(406);
             }
         }
         return $requestHandler->handle($request);
@@ -461,62 +466,67 @@ class ValidarDatos
             else
             {
                 $response->getBody()->write(json_encode(array("error" => "Estados ingresados incorrecto")));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(406);
             }            
         }           
         else
         {
-            echo "entre al else";
-            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            $response->getBody()->write(json_encode(array("error" => "Faltan parametros")));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
         
         return $response;   
     }  
-    public function ValidarCodigoMesaMesa(Request $request, RequestHandler $requestHandler, $response)
+    public function ValidarCodigoMesa(Request $request, RequestHandler $requestHandler, $response)
     {
         $params = $request->getParsedBody(); 
         $codigoMesaIngresado = $params['codigoMesa']; 
 
-        if(isset($codigoMesaIngresado) && !preg_match('/^[a-zA-Z0-9]+$/', $codigoMesaIngresado)) 
+        if(isset($codigoMesaIngresado)) 
         { 
-            $payload = json_encode(array("error" => "El código de mesa solo puede contener números y letras."));
-            $response->getBody()->write($payload); 
-            return $response->withHeader('Content-Type', 'application/json'); 
+            if(!preg_match('/^[a-zA-Z0-9]+$/', $codigoMesaIngresado))
+            {
+                $payload = json_encode(array("error" => "El código de mesa solo puede contener números y letras."));
+                $response->getBody()->write($payload); 
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(406); 
+            }            
         } 
+        else
+        {
+            $response->getBody()->write(json_encode(array("error" => "Faltan parametros")));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
 
         return $requestHandler->handle($request);
     }
     public function ValidarDatosEncuesta(Request $request, RequestHandler $requestHandler, $response)
-{
-    $params = $request->getParsedBody(); 
-    $codigoMesaIngresado = $params['codigoMesa']; 
-    $codigoPedidoIngresado = $params['codigoPedido']; 
-    $puntosMesaIngresado = $params['puntosMesa']; 
-    $puntosRestauranteIngresado = $params['puntosRestaurante']; 
-    $puntosMozoIngresado = $params['puntosMozo']; 
-    $puntosCocineroIngresado = $params['puntosCocinero']; 
-    $comentarioIngresado = $params['comentario']; 
-
-    if (!isset($codigoMesaIngresado) || !preg_match('/^[a-zA-Z0-9]+$/', $codigoMesaIngresado) ||
-        !isset($codigoPedidoIngresado) || !preg_match('/^[a-zA-Z0-9]+$/', $codigoPedidoIngresado) ||
-        !isset($puntosMesaIngresado) || !intval($puntosMesaIngresado) ||
-        !isset($puntosRestauranteIngresado) || !intval($puntosRestauranteIngresado) ||
-        !isset($puntosMozoIngresado) || !intval($puntosMozoIngresado) ||
-        !isset($puntosCocineroIngresado) || !intval($puntosCocineroIngresado) ||
-        !isset($comentarioIngresado) || !is_string($comentarioIngresado) || strlen($comentarioIngresado) > 66 ||
-        Pedido::obtenerPedidoPorCodigoPedido($codigoPedidoIngresado) == null || Encuesta::obtenerEncuestaPorCodigoPedido($codigoPedidoIngresado) != null ||
-        Mesa::obtenerMesaPorCodigoMesa($codigoMesaIngresado) == null || Encuesta::obtenerEncuestaPorCodigoMesa($codigoMesaIngresado) != null) 
     {
-        $payload = json_encode(array("error" => "Los datos ingresados no son válidos. Asegúrese de que el código de mesa solo contenga números y letras, todos los puntos sean enteros, y el comentario no exceda los 66 caracteres."));
-        $response->getBody()->write($payload); 
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(400); 
+        $params = $request->getParsedBody(); 
+        $codigoMesaIngresado = $params['codigoMesa']; 
+        $codigoPedidoIngresado = $params['codigoPedido']; 
+        $puntosMesaIngresado = $params['puntosMesa']; 
+        $puntosRestauranteIngresado = $params['puntosRestaurante']; 
+        $puntosMozoIngresado = $params['puntosMozo']; 
+        $puntosCocineroIngresado = $params['puntosCocinero']; 
+        $comentarioIngresado = $params['comentario']; 
+
+        if (!isset($codigoMesaIngresado) || !preg_match('/^[a-zA-Z0-9]+$/', $codigoMesaIngresado) ||
+            !isset($codigoPedidoIngresado) || !preg_match('/^[a-zA-Z0-9]+$/', $codigoPedidoIngresado) ||
+            !isset($puntosMesaIngresado) || !intval($puntosMesaIngresado) ||
+            !isset($puntosRestauranteIngresado) || !intval($puntosRestauranteIngresado) ||
+            !isset($puntosMozoIngresado) || !intval($puntosMozoIngresado) ||
+            !isset($puntosCocineroIngresado) || !intval($puntosCocineroIngresado) ||
+            !isset($comentarioIngresado) || !is_string($comentarioIngresado) || strlen($comentarioIngresado) > 66 ||
+            Pedido::obtenerPedidoPorCodigoPedido($codigoPedidoIngresado) == null || Encuesta::obtenerEncuestaPorCodigoPedido($codigoPedidoIngresado) != null ||
+            Mesa::obtenerMesaPorCodigoMesa($codigoMesaIngresado) == null || Encuesta::obtenerEncuestaPorCodigoMesa($codigoMesaIngresado) != null) 
+        {
+            $payload = json_encode(array("error" => "Los datos ingresados no son válidos. Asegúrese de que el código de mesa solo contenga números y letras, todos los puntos sean enteros, y el comentario no exceda los 66 caracteres."));
+            $response->getBody()->write($payload); 
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(406); 
+        }
+
+        return $requestHandler->handle($request);
     }
-
-    return $requestHandler->handle($request);
-}
-
-
     public function ValidarDatosLogo(Request $request, RequestHandler $requestHandler, $response)
     {
         $uploadedFiles = $request->getUploadedFiles();       
@@ -533,13 +543,13 @@ class ValidarDatos
             else
             {
                 $response->getBody()->write(json_encode(array("error" => "Foto subida en un formato invalido incorrecto")));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(406);
             }
             
         }           
         else
         {
-            $response->getBody()->write(json_encode(array("error" => "Error. Datos ingresados invalidos")));
+            $response->getBody()->write(json_encode(array("error" => "Faltan parametros")));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
         

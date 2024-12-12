@@ -62,6 +62,8 @@
             else
             {
                 $payload = json_encode(array('mensaje'=>'Datos Invalidos'));
+                $response->getBody()->write($payload);
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
             }
             $response->getBody()->write($payload);
             return $response->withHeader('Content-Type', 'application/json');
